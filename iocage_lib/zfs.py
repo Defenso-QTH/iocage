@@ -33,7 +33,7 @@ class ZFSException(Exception):
 
 
 IOCAGE_POOL_PROP = 'org.freebsd.ioc:active'
-
+IOCAGE_PREFIX_PROP = 'org.freebsd.iocage:prefix'
 
 def list_pools():
     return list(filter(
@@ -92,7 +92,7 @@ def pool_properties(pool):
 
 def iocage_activated_pool():
     for pool in list_pools():
-        if dataset_properties(pool).get('org.freebsd.ioc:active') == 'yes':
+        if dataset_properties(pool).get(IOCAGE_POOL_PROP) == 'yes':
             return pool
     else:
         return None

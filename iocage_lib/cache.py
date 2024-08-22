@@ -4,7 +4,7 @@ import subprocess as su
 import threading
 
 from iocage_lib.zfs import (
-    all_properties, dataset_exists, get_all_dependents, get_dependents_with_depth,
+    all_properties, dataset_exists, get_all_dependents, get_dependents_with_depth, IOCAGE_POOL_PROP,
 )
 
 
@@ -43,7 +43,7 @@ class Cache:
                         all_properties([p for p in pools], types=['filesystem'])
                     )
                 for p in filter(
-                    lambda p: self.dataset_data.get(p, {}).get('org.freebsd.ioc:active') == 'yes',
+                    lambda p: self.dataset_data.get(p, {}).get(IOCAGE_POOL_PROP) == 'yes',
                     pools
                 ):
                     self.ioc_pool = p
