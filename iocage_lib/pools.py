@@ -29,16 +29,24 @@ class Pool(Resource):
         ) == 'yes'
 
     @property
+    def prefix(self):
+      return Dataset(self.name, cache=self.cache).properties.get(
+                  IOCAGE_PREFIX_PROP
+              )
+    
+    @property
     def health(self):
         return self.properties['health']
 
-    def activate_pool(self):
+    def activate_pool(self, prefix=None):
         if self.health != 'ONLINE':
             raise PoolNotActivated(
                 f'Please check pool status, it should be ONLINE'
             )
 
         Dataset(self.name).set_property(IOCAGE_POOL_PROP, 'yes')
+        if prefix:
+          Dataset(self.name).set_property(IOCAGE_PREFIX_PROP, prefix)
         self.comment_check()
 
     def comment_check(self):
@@ -50,9 +58,9 @@ class Pool(Resource):
                 ds.set_property('comment', '-')
 
     def deactivate_pool(self):
-        Dataset(self.name, cache=self.cache).set_property(
-            IOCAGE_POOL_PROP, 'no'
-        )
+        ds = Dataset(self.name, cache=self.cache)
+        ds.set_property(IOCAGE_POOL_PROP, 'no')
+        ds.inherit_property(IOCAGE_PREFIX_PROP)
         self.comment_check()
 
     def __eq__(self, other):

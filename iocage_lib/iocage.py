@@ -355,7 +355,7 @@ class IOCage:
 
         return stderr
 
-    def activate(self, zpool):
+    def activate(self, zpool, prefix=None):
         """Activates the zpool for iocage usage"""
         zpool = Pool(zpool, cache=False)
         if not zpool.exists:
@@ -373,7 +373,7 @@ class IOCage:
                 if pool.root_dataset.locked:
                     locked_error = f'ZFS pool "{zpool}" root dataset is locked'
 
-                iocage_ds = Dataset(os.path.join(zpool.name, 'iocage'))
+                iocage_ds = Dataset(os.path.join(zpool.name, prefix, 'iocage'))
                 if iocage_ds.exists and iocage_ds.locked:
                     locked_error = f'ZFS dataset "{iocage_ds.name}" is locked'
                 if locked_error:
@@ -386,7 +386,7 @@ class IOCage:
                         silent=self.silent,
                     )
                 else:
-                    pool.activate_pool()
+                    pool.activate_pool(prefix)
             else:
                 pool.deactivate_pool()
 
