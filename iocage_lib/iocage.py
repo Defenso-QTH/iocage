@@ -1708,8 +1708,20 @@ class IOCage:
 
         return snap_list
 
+    def snapshot_all(self, name):
+        # We want a consistent name across a snapshot batch.
+        if not name:
+            name = datetime.datetime.utcnow().strftime("%F_%T")
+        self._all = False
+        for jail in self.jails:
+            self.jail = jail
+            self.snapshot(name)
+
     def snapshot(self, name):
         """Will create a snapshot for the given jail"""
+        if self._all:
+            self.snapshot_all(name)
+            return
         date = datetime.datetime.utcnow().strftime("%F_%T")
         uuid, path = self.__check_jail_existence__()
 
@@ -2159,8 +2171,17 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
 
         ioc_debug.IOCDebug(directory).run_debug()
 
+    def snap_remove_all(self, snapshot):
+        self._all = False
+        for jail in self.jails:
+            self.jail = jail
+            self.snap_remove(snapshot)
+
     def snap_remove(self, snapshot):
         """Removes user supplied snapshot from jail"""
+        if self._all:
+            self.snap_remove_all(snapshot)
+            return
         uuid, path = self.__check_jail_existence__()
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
 

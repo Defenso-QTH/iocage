@@ -34,4 +34,5 @@ import iocage_lib.iocage as ioc
                                    " after @", required=True)
 def cli(jail, name):
     """Removes a snapshot from a user supplied jail."""
-    ioc.IOCage(jail=jail).snap_remove(name)
+    skip_jails = jail != 'ALL'
+    ioc.IOCage(jail=jail, skip_jails=skip_jails).snap_remove(name)
