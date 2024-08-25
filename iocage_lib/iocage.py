@@ -1647,8 +1647,20 @@ class IOCage:
             rtsold_enable = "YES" if "accept_rtadv" in value else "NO"
             ioc_common.set_rcconf(path, "rtsold_enable", rtsold_enable)
 
+    def snap_list_all(self, long, _sort):
+        self._all = False
+        snap_list = []
+        for jail in self.jails:
+            self.jail = jail
+            snap_list.extend(
+                [[jail, *snap] for snap in self.snap_list(long, _sort)]
+                )
+        return snap_list
+
     def snap_list(self, long=True, _sort="created"):
         """Gathers a list of snapshots and returns it"""
+        if self._all:
+          return self.snap_list_all(long=long, _sort=_sort)
         uuid, path = self.__check_jail_existence__()
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
         snap_list = []
