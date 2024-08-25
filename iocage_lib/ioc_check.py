@@ -59,7 +59,7 @@ class IOCCheck(object):
 
         self.pool_root_dataset = Dataset(self.pool, cache=reset_cache)
         self.iocage_dataset = Dataset(
-            os.path.join(self.pool, 'iocage'), cache=reset_cache
+            os.path.join(self.pool, self.pool.prefix, 'iocage'), cache=reset_cache
         )
 
         if migrate:

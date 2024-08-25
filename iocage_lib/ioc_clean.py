@@ -52,7 +52,7 @@ class IOCClean:
             silent=self.silent)
 
         iocage_lib.ioc_destroy.IOCDestroy().destroy_jail(
-            f'{self.pool}/iocage/jails',
+            f'{self.iocroot}/jails',
             clean=True
         )
 
@@ -66,7 +66,7 @@ class IOCClean:
             silent=self.silent)
 
         iocage_lib.ioc_destroy.IOCDestroy().destroy_jail(
-            f'{self.pool}/iocage/download',
+            f'{self.iocroot}/download',
             clean=True
         )
 
@@ -78,7 +78,7 @@ class IOCClean:
             silent=self.silent)
 
         iocage_lib.ioc_destroy.IOCDestroy().destroy_jail(
-            f'{self.pool}/iocage/releases',
+            f'{self.iocroot}/releases',
             clean=True)
 
     def clean_all(self):
@@ -96,7 +96,7 @@ class IOCClean:
                 silent=self.silent)
 
             iocage_lib.ioc_destroy.IOCDestroy().__destroy_parse_datasets__(
-                f'{self.pool}/{dataset}', clean=True)
+                os.path.join(self.pool, self.pool.prefix, dataset, clean=True)
 
     def clean_templates(self):
         """Cleans all templates and their respective children."""
@@ -108,7 +108,7 @@ class IOCClean:
             silent=self.silent)
 
         iocage_lib.ioc_destroy.IOCDestroy().__destroy_parse_datasets__(
-            f"{self.pool}/iocage/templates",
+            f"{self.iocroot}/templates",
             clean=True)
 
     def clean_images(self):
@@ -120,7 +120,7 @@ class IOCClean:
             _callback=self.callback,
             silent=self.silent)
 
-        Dataset(f'{self.pool}/iocage/images').destroy(True, True)
+        Dataset(f'{self.iocroot}/images').destroy(True, True)
 
     def clean_debug(self):
         """Removes the debug directory"""

@@ -461,7 +461,7 @@ class IOCConfiguration:
                 if old:
                     matches[0].activate_pool()
 
-                return matches[0].name
+                return matches[0]
 
             elif len(matches) > 1:
                 iocage_lib.ioc_common.logit(
@@ -548,12 +548,12 @@ class IOCConfiguration:
 
                     zpool.activate_pool()
 
-                    return zpool.name
+                    return zpool
 
         pool = get_pool()
 
         def get_iocroot():
-            loc = Dataset(os.path.join(pool, 'iocage'))
+            loc = Dataset(os.path.join(pool, pool.prefix, 'iocage'))
 
             if not loc.exists:
                 # It's okay, ioc check would create datasets
@@ -569,7 +569,7 @@ class IOCConfiguration:
                     _callback=self.callback,
                     silent=self.silent)
 
-        return pool, get_iocroot()
+        return pool.name, get_iocroot()
 
     @staticmethod
     def get_mac_prefix():
@@ -1445,7 +1445,7 @@ class IOCJson(IOCConfiguration):
 
     def json_convert_from_zfs(self, uuid, skip=False):
         """Convert to JSON. Accepts a jail UUID"""
-        dataset = f"{self.pool}/iocage/jails/{uuid}"
+        dataset = f"{self.iocroot}/jails/{uuid}"
         jail_zfs_prop = "org.freebsd.iocage:jail_zfs_dataset"
 
         if os.geteuid() != 0:
@@ -1509,7 +1509,7 @@ class IOCJson(IOCConfiguration):
         legacy_short = False
 
         jail_dataset = Dataset(
-            os.path.join(self.pool, 'iocage', jail_type, jail_uuid)
+            os.path.join(self.iocroot jail_type, jail_uuid)
         )
         if not jail_dataset.exists:
             if os.path.isfile(os.path.join(self.location, 'config')):
@@ -1598,9 +1598,9 @@ class IOCJson(IOCConfiguration):
                             # Hack88 migration to a perm short UUID.
                             short_uuid = full_uuid[:8]
                             full_dataset = \
-                                f"{self.pool}/iocage/jails/{full_uuid}"
+                                f"{self.iocroot}/jails/{full_uuid}"
                             short_dataset = \
-                                f"{self.pool}/iocage/jails/{short_uuid}"
+                                f"{self.iocroot}/jails/{short_uuid}"
 
                             jail_hostname = Dataset(
                                 full_dataset
@@ -1795,8 +1795,8 @@ class IOCJson(IOCConfiguration):
             ]
 
             if key == "template":
-                old_location = f"{self.pool}/iocage/jails/{uuid}"
-                new_location = f"{self.pool}/iocage/templates/{uuid}"
+                old_location = f"{self.iocroot}/jails/{uuid}"
+                new_location = f"{self.iocroot}/templates/{uuid}"
 
                 if status:
                     iocage_lib.ioc_common.logit(
@@ -2250,7 +2250,7 @@ class IOCJson(IOCConfiguration):
                         silent=self.silent)
 
             Dataset(
-                os.path.join(self.pool, 'iocage', _type, uuid)
+                os.path.join(self.iocroot, _type, uuid)
             ).set_property(key, value)
 
             return value, conf
@@ -2559,7 +2559,7 @@ class IOCJson(IOCConfiguration):
 
         conf, write = self.json_load()
         uuid = conf["host_hostuuid"]
-        _path = Dataset(f"{self.pool}/iocage/jails/{uuid}").path
+        _path = Dataset(f"{self.iocroot}/jails/{uuid}").path
 
         # Plugin variables
         settings = self.json_plugin_load()
@@ -2607,7 +2607,7 @@ class IOCJson(IOCConfiguration):
     def json_plugin_set_value(self, prop):
         conf, write = self.json_load()
         uuid = conf["host_hostuuid"]
-        _path = Dataset(f"{self.pool}/iocage/jails/{uuid}").path
+        _path = Dataset(f"{self.iocroot}/jails/{uuid}").path
         status, _ = iocage_lib.ioc_list.IOCList().list_get_jid(uuid)
 
         # Plugin variables
@@ -2754,7 +2754,7 @@ class IOCJson(IOCConfiguration):
 
                     # Can't rename when the child is
                     # in a non-global zone
-                    jail_parent_ds = f"{self.pool}/iocage/jails/{uuid}"
+                    jail_parent_ds = f"{self.iocroot}/jails/{uuid}"
                     jail_parent_data_obj = Dataset(
                         os.path.join(jail_parent_ds, 'data')
                     )
@@ -2789,7 +2789,7 @@ class IOCJson(IOCConfiguration):
                             snap.clone(new_dataset)
 
                     # Datasets are not mounted upon creation
-                    new_jail_parent_ds = f"{self.pool}/iocage/jails/{tag}"
+                    new_jail_parent_ds = f"{self.iocroot}/jails/{tag}"
                     new_jail = Dataset(new_jail_parent_ds)
                     if not new_jail.mounted:
                         new_jail.mount()
@@ -2802,7 +2802,7 @@ class IOCJson(IOCConfiguration):
 
                     # Easier.
                     su.check_call([
-                        "zfs", "rename", "-r", f"{self.pool}/iocage@{uuid}",
+                        "zfs", "rename", "-r", f"{self.iocroot}@{uuid}",
                         f"@{tag}"
                     ])
 

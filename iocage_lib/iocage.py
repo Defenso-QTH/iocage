@@ -633,7 +633,7 @@ class IOCage:
                 su.run(
                     [
                         'zfs', 'destroy', '-r',
-                        f'{self.pool}/iocage/jails/{clone}@{_uuid}'
+                        f'{self.iocroot}/jails/{clone}@{_uuid}'
                     ]
                 )
             raise
@@ -642,7 +642,7 @@ class IOCage:
 
     def destroy_release(self, download=False):
         """Destroy supplied RELEASE and the download dataset if asked"""
-        path = f"{self.pool}/iocage/releases/{self.jail}"
+        path = f"{self.iocroot}/releases/{self.jail}"
 
         release = Release(self.jail)
         # Let's make sure the release exists before we try to destroy it
@@ -663,7 +663,7 @@ class IOCage:
         ioc_destroy.IOCDestroy().__destroy_parse_datasets__(path, stop=False)
 
         if download:
-            path = f"{self.pool}/iocage/download/{self.jail}"
+            path = f"{self.iocroot}/download/{self.jail}"
             ioc_common.logit(
                 {
                     "level": "INFO",
@@ -688,7 +688,7 @@ class IOCage:
 
             if "Configuration is missing" in err:
                 uuid = err.split()[5]
-                path = f"{self.pool}/iocage/jails/{uuid}"
+                path = f"{self.iocroot}/jails/{uuid}"
 
                 if uuid == self.jail:
                     ioc_destroy.IOCDestroy().__destroy_parse_datasets__(
@@ -714,7 +714,7 @@ class IOCage:
         except FileNotFoundError as err:
             # Jail is lacking a configuration, time to nuke it from orbit.
             uuid = str(err).rsplit("/")[-2]
-            path = f"{self.pool}/iocage/jails/{uuid}"
+            path = f"{self.iocroot}/jails/{uuid}"
 
             if uuid == self.jail:
                 ioc_destroy.IOCDestroy().__destroy_parse_datasets__(path)
@@ -768,12 +768,12 @@ class IOCage:
 
         for jail, path in self.jails.items():
             conf = ioc_json.IOCJson(path).json_get_value('all')
-            mountpoint = f"{self.pool}/iocage/jails/{jail}"
+            mountpoint = f"{self.iocroot}/jails/{jail}"
 
             template = conf["type"]
 
             if template == "template":
-                mountpoint = f"{self.pool}/iocage/templates/{jail}"
+                mountpoint = f"{self.iocroot}/templates/{jail}"
 
             ds = Dataset(mountpoint)
             zconf = ds.properties
@@ -1394,8 +1394,8 @@ class IOCage:
                 _callback=self.callback,
                 silent=self.silent)
 
-        path = f"{self.pool}/iocage/{_folders[0]}/{uuid}"
-        new_path = f"{self.pool}/iocage/{_folders[0]}/{new_name}"
+        path = f"{self.iocroot}/{_folders[0]}/{uuid}"
+        new_path = f"{self.iocroot}/{_folders[0]}/{new_name}"
 
         _silent = self.silent
         self.silent = True
@@ -1522,9 +1522,9 @@ class IOCage:
                 silent=self.silent)
 
         if ioc_common.check_truthy(conf['template']):
-            target = f"{self.pool}/iocage/templates/{uuid}"
+            target = f"{self.iocroot}/templates/{uuid}"
         else:
-            target = f"{self.pool}/iocage/jails/{uuid}"
+            target = f"{self.iocroot}/jails/{uuid}"
 
         dataset = Dataset(target)
         if not dataset.exists:
@@ -1671,9 +1671,9 @@ class IOCage:
         snap_list_root = []
 
         if ioc_common.check_truthy(conf['template']):
-            full_path = f"{self.pool}/iocage/templates/{uuid}"
+            full_path = f"{self.iocroot}/templates/{uuid}"
         else:
-            full_path = f"{self.pool}/iocage/jails/{uuid}"
+            full_path = f"{self.iocroot}/jails/{uuid}"
 
         dataset = Dataset(full_path)
 
@@ -1749,9 +1749,9 @@ class IOCage:
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
 
         if ioc_common.check_truthy(conf['template']):
-            target = f"{self.pool}/iocage/templates/{uuid}"
+            target = f"{self.iocroot}/templates/{uuid}"
         else:
-            target = f"{self.pool}/iocage/jails/{uuid}"
+            target = f"{self.iocroot}/jails/{uuid}"
 
         snap = Snapshot(f'{target}@{name}')
         if snap.exists:
@@ -2228,9 +2228,9 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
 
         if ioc_common.check_truthy(conf['template']):
-            target = f'{self.pool}/iocage/templates/{uuid}@{snapshot}'
+            target = f'{self.iocroot}/templates/{uuid}@{snapshot}'
         else:
-            target = f'{self.pool}/iocage/jails/{uuid}@{snapshot}'
+            target = f'{self.iocroot}/jails/{uuid}@{snapshot}'
 
         # Let's verify target exists and then destroy it, else log it
         snapshot = Snapshot(target)

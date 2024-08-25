@@ -238,7 +238,7 @@ class IOCFetch:
                     silent=self.silent)
 
             dataset = f"{self.iocroot}/download/{self.release}"
-            pool_dataset = f"{self.pool}/iocage/download/{self.release}"
+            pool_dataset = f"{self.iocroot}/download/{self.release}"
 
             if os.path.isdir(dataset):
                 pass
@@ -657,7 +657,7 @@ class IOCFetch:
 
         if not os.path.isdir(dataset):
             fresh = True
-            dataset = f"{self.pool}/iocage/download/{self.release}"
+            dataset = f"{self.iocroot}/download/{self.release}"
 
             ds = Dataset(dataset)
             if not ds.exists:
@@ -805,7 +805,7 @@ class IOCFetch:
         src = f"{self.iocroot}/download/{self.release}/{f}"
         dest = f"{self.iocroot}/releases/{self.release}/root"
 
-        dataset = f"{self.pool}/iocage/releases/{self.release}/root"
+        dataset = f"{self.iocroot}/releases/{self.release}/root"
 
         if not os.path.isdir(dest):
             self.zpool.create_dataset({

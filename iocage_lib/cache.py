@@ -58,7 +58,7 @@ class Cache:
             ioc_pool = self.iocage_activated_pool_internal(lock=False)
             if ioc_pool:
                 dependents = self.dependents_internal(ioc_pool, 1, lock=False)
-                ioc_ds = os.path.join(ioc_pool, 'iocage')
+                ioc_ds = os.path.join(ioc_pool, ioc_pool.prefix, 'iocage')
             if not self.ioc_dataset and ioc_pool and ioc_ds in dependents:
                 self.ioc_dataset = ioc_ds
             return self.ioc_dataset
@@ -70,7 +70,7 @@ class Cache:
             if not self.dataset_data or set(self.dataset_data) == set(self.pool_data):
                 ds = ''
                 if ioc_pool:
-                    ds = os.path.join(ioc_pool, 'iocage')
+                    ds = os.path.join(ioc_pool, ioc_pool.prefix, 'iocage')
                 self.dataset_data.update(all_properties(
                     [ds] if ds and dataset_exists(ds) else [], recursive=True, types=['filesystem']
                 ))

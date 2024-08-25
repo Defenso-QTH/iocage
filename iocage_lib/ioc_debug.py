@@ -64,10 +64,10 @@ class IOCDebug(object):
         self.run_host_debug()
 
         jails = Dataset(
-            os.path.join(self.pool, 'iocage/jails')
+            os.path.join(self.pool, self.pool.prefix, 'jails')
         ).get_dependents()
         templates = Dataset(
-            os.path.join(self.pool, 'iocage/templates')
+            os.path.join(self.pool, self.pool.prefix, 'templates')
         ).get_dependents()
 
         for jail in jails:

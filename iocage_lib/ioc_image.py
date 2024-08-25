@@ -53,7 +53,7 @@ class IOCImage(object):
         name = f"{uuid}_{self.date}"
         image = f"{images}/{name}"
         export_type, jail_name = path.rsplit('/', 2)[-2:]
-        image_path = f"{self.pool}/iocage/{export_type}/{jail_name}"
+        image_path = f"{self.iocroot}/{export_type}/{jail_name}"
         jail_list = []
         extension = 'zip' if compression_algo == 'zip' else 'tar.xz'
 
@@ -153,7 +153,7 @@ class IOCImage(object):
 
         # Cleanup our mess.
         try:
-            target = f"{self.pool}/iocage/jails/{uuid}@ioc-export-{self.date}"
+            target = f"{self.iocroot}/jails/{uuid}@ioc-export-{self.date}"
             iocage_lib.ioc_common.checkoutput(
                 ["zfs", "destroy", "-r", target], stderr=su.STDOUT)
 
@@ -280,7 +280,7 @@ class IOCImage(object):
                 recv = su.Popen(
                     [
                         'zfs', 'recv', '-F', os.path.join(
-                            self.pool, 'iocage/jails', z_dataset_type
+                            self.iocroot, 'jails', z_dataset_type
                         )
                     ], stdin=su.PIPE
                 )
@@ -297,7 +297,7 @@ class IOCImage(object):
 
         # Cleanup our mess.
         try:
-            target = f"{self.pool}/iocage/jails/{uuid}@ioc-export-{date}"
+            target = f"{self.iocroot}/jails/{uuid}@ioc-export-{date}"
 
             iocage_lib.ioc_common.checkoutput(
                 ["zfs", "destroy", "-r", target], stderr=su.STDOUT)
