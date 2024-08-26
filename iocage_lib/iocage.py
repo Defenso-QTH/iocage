@@ -2194,6 +2194,10 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         if self._all:
             self.snap_remove_all(snapshot)
             return
+        if snapshot == 'ALL':
+            for snapshot, *_ in reversed(self.snap_list(long=False)):
+                self.snap_remove(snapshot)
+            return
         uuid, path = self.__check_jail_existence__()
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
 
