@@ -97,6 +97,7 @@ class IOCClean:
 
             iocage_lib.ioc_destroy.IOCDestroy().__destroy_parse_datasets__(
                 os.path.join(self.pool, self.pool.prefix, dataset, clean=True)
+                )
 
     def clean_templates(self):
         """Cleans all templates and their respective children."""
