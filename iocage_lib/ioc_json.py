@@ -1509,7 +1509,7 @@ class IOCJson(IOCConfiguration):
         legacy_short = False
 
         jail_dataset = Dataset(
-            os.path.join(self.iocroot jail_type, jail_uuid)
+            os.path.join(self.iocroot, jail_type, jail_uuid)
         )
         if not jail_dataset.exists:
             if os.path.isfile(os.path.join(self.location, 'config')):
