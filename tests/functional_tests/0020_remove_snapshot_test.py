@@ -29,6 +29,7 @@ require_root = pytest.mark.require_root
 require_zpool = pytest.mark.require_zpool
 
 SNAP_NAME = 'snaptest'
+SNAPALL_NAME = 'snapalltest'
 
 
 @require_root
@@ -60,3 +61,34 @@ def test_01_remove_snapshot(invoke_cli, resource_selector, skip_test):
     )
 
     assert remove_snap.exists is False
+
+
+@require_root
+@require_zpool
+def test_02_remove_snapshot_of_all_jails(
+    invoke_cli, resource_selector, skip_test):
+    jails = resource_selector.all_jails
+    skip_test(not jails)
+
+    snap_jails = []
+    for jail in jails:
+        if any(
+            SNAPALL_NAME in snap.id for snap in jail.recursive_snapshots
+        ):
+            snap_jails.append(jail)
+
+    skip_test(not snap_jails)
+
+    remove_snaps = []
+    for snap_jail in snap_jails:
+        for snap in snap_jail.recursive_snapshots:
+            if SNAPALL_NAME in snap.id:
+                remove_snaps.append(snap)
+
+    assert all(snap.exists is True for snap in remove_snaps)
+
+    invoke_cli(
+        ['snapremove', '-n', SNAPALL_NAME, 'ALL']
+    )
+
+    assert all(snap.exists is False for snap in remove_snaps)
