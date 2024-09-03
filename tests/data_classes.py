@@ -27,7 +27,7 @@ class Row:
         for attr in [
             'name', 'jid', 'state', 'release', 'ip4', 'ip6', 'orig_release',
             'boot', 'type', 'template', 'basejail', 'crt', 'res', 'qta',
-            'use', 'ava', 'created', 'rsize', 'used', 'orig_name'
+            'use', 'ava', 'created', 'rsize', 'used', 'orig_name', 'jail'
         ]:
             setattr(self, attr, None)
 
@@ -266,6 +266,10 @@ class Row:
 
     def snapshot_parse(self):
         self.name, self.created, self.rsize, self.used = self.standard_parse()
+
+
+    def snapall_parse(self):
+        self.jail, self.name, self.created, self.rsize, self.used = self.standard_parse()
 
 
 class ZFS:

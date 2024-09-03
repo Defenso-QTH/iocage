@@ -1655,6 +1655,8 @@ class IOCage:
             snap_list.extend(
                 [[jail, *snap] for snap in self.snap_list(long, _sort)]
                 )
+        sort = ioc_common.ioc_sort("snaplist", _sort, data=snap_list)
+        snap_list.sort(key=sort)
         return snap_list
 
     def snap_list(self, long=True, _sort="created"):

@@ -43,9 +43,11 @@ def cli(header, jail, _long, _sort):
     snap_list = ioc.IOCage(jail=jail).snap_list(_long, _sort)
 
     if header:
-        cols = ["NAME", "CREATED", "RSIZE", "USED"]
         if jail == 'ALL':
-            cols.insert(0, "JAIL")
+            cols = ["JAIL"]
+        else:
+            cols = []
+        cols.extend(["NAME", "CREATED", "RSIZE", "USED"])
         snap_list.insert(0, cols)
         # We get an infinite float otherwise.
         table.set_cols_dtype(["t"]*len(cols))
