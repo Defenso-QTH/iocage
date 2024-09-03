@@ -8,18 +8,27 @@ iocage_tests_task:
   install_pkgs_script:
     - sed -i '' 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
     - pkg install -y git python3 py311-sqlite3
-    - pkg install -y rust
   configure_python_script:
     - python3 -m ensurepip
-  pip_cache:
-    folder: ~/.cache/pip
-    populate_script:
-      - python3 -m pip install -r requirements-test.txt
-      - python3 -m pip install -r requirements.txt
-      - python3 -m pip install -U cython
+  matrix:
+    - name: Build python packages
+      install_rust_script:
+        - pkg install -y rust
+      pip_cache:
+        folder: ~/.cache/pip
+        populate_script:
+          - python3 -m pip install -r requirements-test.txt
+          - python3 -m pip install -r requirements.txt
+          - python3 -m pip install -U cython
+      update_cache_script:
+        - python3 -m pip install -U -r requirements-test.txt
+        - python3 -m pip install -U -r requirements.txt
+    - name: Use prebuilt packages
+      install_python_packages_script:
+        - sed -E 's/([^<>=]+).*/py311-\1/' requirements.txt requirements-test.txt | xargs pkg install -y
+        # Necessary as long as py311-pytest a'd py311-pytest-pep8 conflict
+        - python3 -m pip install -r requirements-test.txt
   env_setup_script:
-    - python3 -m pip install -U -r requirements-test.txt
-    - python3 -m pip install -U -r requirements.txt
     - mount -t fdescfs null /dev/fd
     - pkg install -y devel/py-libzfs
   install_iocage_script:
