@@ -141,9 +141,10 @@ def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
 
     assert all(snap.exists is True for snap in remove_snaps)
 
-    invoke_cli(
+    result = invoke_cli(
         ['snapremove', '-n', 'ALL', snap_jail.name, '--force']
     )
+    print("Result:", result.output)
 
     assert all(snap.exists is False for snap in remove_snaps)
 
