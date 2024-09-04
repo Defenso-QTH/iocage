@@ -119,3 +119,30 @@ def test_03_remove_all_snapshot_fail(invoke_cli, resource_selector, skip_test):
     )
 
     assert failremove_snap.exists is True
+
+
+@require_root
+@require_zpool
+def test_04_remove_all_snapshot_success(invoke_cli, resource_selector,
+                                        skip_test):
+    jails = resource_selector.all_jails_having_snapshots
+    skip_test(not jails)
+
+    snap_jail = None
+    for jail in jails:
+        if (not jail.is_template and not jail.is_cloned and
+            len(jail.recursive_snapshots)>1):
+            snap_jail = jail
+            break
+
+    skip_test(not snap_jail)
+
+    remove_snaps = snap_jail.recursive_snapshots
+
+    assert all(snap.exists is True for snap in remove_snaps)
+
+    invoke_cli(
+        ['snapremove', '-n', 'ALL', snap_jail.name, '--force']
+    )
+
+    assert all(snap.exists is False for snap in remove_snaps)
