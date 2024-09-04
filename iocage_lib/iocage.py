@@ -2185,18 +2185,34 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
 
         ioc_debug.IOCDebug(directory).run_debug()
 
+    def _get_cloned_datasets(self):
+        return {
+                    d.properties.get('origin')
+                    for d in Dataset(
+                        os.path.join(self.pool, 'iocage')
+                    ).get_dependents()
+                }
+
     def snap_remove_all(self, snapshot):
         self._all = False
+        
         for jail in self.jails:
             self.jail = jail
-            self.snap_remove(snapshot)
+            self.snap_remove(snapshot,
+                cloned_datasets=self._get_cloned_datasets()
+            )
 
-    def snap_remove(self, snapshot):
+    def snap_remove(self, snapshot, cloned_datasets=None):
         """Removes user supplied snapshot from jail"""
         if self._all:
             self.snap_remove_all(snapshot)
             return
         if snapshot == 'ALL':
+            if cloned_datasets is None:
+                cloned_datasets = self._get_cloned_datasets()
+            print("Cloned datasets =", cloned_datasets)
+            print("Snap list =", self.snap_list(long=False))
+            assert False
             for snapshot, *_ in reversed(self.snap_list(long=False)):
                 if not '/' in snapshot:
                     self.snap_remove(snapshot)
