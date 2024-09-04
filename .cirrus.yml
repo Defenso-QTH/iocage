@@ -11,13 +11,13 @@ iocage_tests_task:
   configure_python_script:
     - python3 -m ensurepip
   freebsd_release_cache:
-    folder: ~/freebsd-img/
+    folder: /usr/local/freebsd-img/
     populate_script:
-      - mkdir -p ~/freebsd-img/14.1-RELEASE
-      - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/MANIFEST https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/MANIFEST
-      - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/base.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/base.txz
-      - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/lib32.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/lib32.txz
-      - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/src.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/src.txz
+      - mkdir -p /usr/local/freebsd-img/14.1-RELEASE
+      - fetch -a -m -o /usr/local/freebsd-img/14.1-RELEASE/MANIFEST https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/MANIFEST
+      - fetch -a -m -o /usr/local/freebsd-img/14.1-RELEASE/base.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/base.txz
+      - fetch -a -m -o /usr/local/freebsd-img/14.1-RELEASE/lib32.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/lib32.txz
+      - fetch -a -m -o /usr/local/freebsd-img/14.1-RELEASE/src.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/src.txz
   upload_caches:
     - freebsd_release
   matrix:
