@@ -18,6 +18,8 @@ iocage_tests_task:
       - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/base.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/base.txz
       - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/lib32.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/lib32.txz
       - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/src.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/src.txz
+  upload_caches:
+    - freebsd_release
   matrix:
     - name: Build python packages
       install_rust_script:
@@ -31,6 +33,8 @@ iocage_tests_task:
       update_cache_script:
         - python3 -m pip install -U -r requirements-test.txt
         - python3 -m pip install -U -r requirements.txt
+      upload_caches:
+        - pip
     - name: Use prebuilt packages
       install_python_packages_script:
         - sed -E 's/([^<>=]+).*/py311-\1/' requirements.txt requirements-test.txt | xargs pkg install -y
