@@ -95,7 +95,7 @@ def test_02_remove_snapshot_of_all_jails(
 
 @require_root
 @require_zpool
-def test_03_remove_all_snapshot_fail(invoke_cli, resource_selector, skip_test):
+def test_03_remove_all_snapshots_fail(invoke_cli, resource_selector, skip_test):
     jails = resource_selector.all_jails_having_snapshots
     skip_test(not jails)
 
@@ -123,7 +123,7 @@ def test_03_remove_all_snapshot_fail(invoke_cli, resource_selector, skip_test):
 
 @require_root
 @require_zpool
-def test_04_remove_all_snapshot_success(invoke_cli, resource_selector,
+def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
                                         skip_test):
     jails = resource_selector.all_jails_having_snapshots
     skip_test(not jails)
@@ -143,6 +143,27 @@ def test_04_remove_all_snapshot_success(invoke_cli, resource_selector,
 
     invoke_cli(
         ['snapremove', '-n', 'ALL', snap_jail.name, '--force']
+    )
+
+    assert all(snap.exists is False for snap in remove_snaps)
+
+
+@require_root
+@require_zpool
+def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
+                                        skip_test):
+    jails = resource_selector.all_jails_having_snapshots
+    skip_test(not jails)
+
+    remove_snaps = [
+        snap for jail in jails for snap in jail.recursive_snapshots
+    ]
+
+    assert len(remove_snaps) >= len(jails)
+    assert all(snap.exists is True for snap in remove_snaps)
+
+    invoke_cli(
+        ['snapremove', '-n', 'ALL', 'ALL', '--force']
     )
 
     assert all(snap.exists is False for snap in remove_snaps)
