@@ -2186,8 +2186,8 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         ioc_debug.IOCDebug(directory).run_debug()
 
     def _get_cloned_datasets(self):
-        print("Dependents =", Dataset(
-                                os.path.join(self.pool, 'iocage')).get_dependents())
+        print("Dependents =", list(Dataset(
+                                os.path.join(self.pool, 'iocage')).get_dependents()))
         return {
                     d.properties.get('origin')
                     for d in Dataset(
