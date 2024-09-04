@@ -2187,12 +2187,12 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
 
     def _get_cloned_datasets(self):
         print("Dependents =", list(Dataset(
-                                os.path.join(self.pool, 'iocage')).get_dependents()))
+                                os.path.join(self.pool, 'iocage')).get_dependents(depth=2)))
         return {
                     d.properties.get('origin')
                     for d in Dataset(
                         os.path.join(self.pool, 'iocage')
-                    ).get_dependents()
+                    ).get_dependents(depth=2)
                 }
 
     def snap_remove_all(self, snapshot):
