@@ -10,6 +10,14 @@ iocage_tests_task:
     - pkg install -y git python3 py311-sqlite3
   configure_python_script:
     - python3 -m ensurepip
+  freebsd_release_cache:
+    folder: ~/freebsd-img/
+    populate_script:
+      - mkdir -p ~/freebsd-img/14.1-RELEASE
+      - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/MANIFEST https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/MANIFEST
+      - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/base.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/base.txz
+      - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/lib32.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/lib32.txz
+      - fetch -a -m -o ~/freebsd-img/14.1-RELEASE/src.txz https://download.freebsd.org/ftp/releases/amd64/14.1-RELEASE/src.txz
   matrix:
     - name: Build python packages
       install_rust_script:
@@ -33,4 +41,4 @@ iocage_tests_task:
     - pkg install -y devel/py-libzfs
   install_iocage_script:
     - python3 setup.py install
-  test_script: pytest --zpool=pool tests/functional_tests
+  test_script: pytest --zpool=pool tests/functional_tests --_file --root-dir=~/freebsd-img
