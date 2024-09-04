@@ -2211,7 +2211,7 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
             if cloned_datasets is None:
                 cloned_datasets = self._get_cloned_datasets()
             print("Cloned datasets =", cloned_datasets)
-            print("Snap list =", self.snap_list(long=False).zip()[0])
+            print("Snap list =", next(zip(*self.snap_list(long=False))))
             for snapshot, *_ in reversed(self.snap_list(long=False)):
                 if not '/' in snapshot:
                     self.snap_remove(snapshot)
