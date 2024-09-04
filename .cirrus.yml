@@ -41,4 +41,4 @@ iocage_tests_task:
     - pkg install -y devel/py-libzfs
   install_iocage_script:
     - python3 setup.py install
-  test_script: pytest --zpool=pool tests/functional_tests --_file --root-dir=~/freebsd-img
+  test_script: pytest --zpool=pool tests/functional_tests --_file --root-dir=~/freebsd-img -rA
