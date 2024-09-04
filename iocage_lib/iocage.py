@@ -2217,7 +2217,13 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
             print("Snap list =", [s for s in self.snap_list(long=False)])
             for snapshot, *_ in reversed(self.snap_list(long=False)):
                 if not '/' in snapshot:
-                    self.snap_remove(snapshot)
+                    if f"{self.jail}@{snapshot}" in cloned_datasets:
+                        ioc_common.logit({
+                                        'level': 'WARNING',
+                                        'message': f"Skipped snapshot {self.jail}@{snapshot}: used by clones."
+                        })
+                    else:
+                        self.snap_remove(snapshot)
             return
         uuid, path = self.__check_jail_existence__()
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
