@@ -124,7 +124,7 @@ def test_03_remove_all_snapshots_fail(invoke_cli, resource_selector, skip_test):
 @require_root
 @require_zpool
 def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
-                                        skip_test):
+                                        snapshot, skip_test):
     jails = resource_selector.all_jails_having_snapshots
     skip_test(not jails)
 
@@ -137,34 +137,47 @@ def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
 
     skip_test(not snap_jail)
 
-    remove_snaps = snap_jail.recursive_snapshots
+    remove_snaps = set(snap_jail.recursive_snapshots)
+    print("Test - Remove_snaps:", remove_snaps)
+    assert all(snap.exists for snap in remove_snaps)
 
-    assert all(snap.exists is True for snap in remove_snaps)
+    cloned_snaps = resource_selector.cloned_snapshots_set
+    print("Test - Cloned snapshots:", cloned_snaps)
+    assert all(snap.exists for snap in cloned_snaps)
+
+    filtered_remove_snaps = remove_snaps - cloned_snaps
+    print("Test - Filtered remove_snaps", filtered_remove_snaps)
 
     result = invoke_cli(
         ['snapremove', '-n', 'ALL', snap_jail.name, '--force']
     )
     print("Result:", result.output)
 
-    assert all(snap.exists is False for snap in remove_snaps)
+    assert all(snap.exists is False for snap in filtered_remove_snaps)
 
 
 @require_root
 @require_zpool
 def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
-                                        skip_test):
+                                        snapshot, skip_test):
     jails = resource_selector.all_jails_having_snapshots
     skip_test(not jails)
 
-    remove_snaps = [
-        snap for jail in jails for snap in jail.recursive_snapshots
-    ]
+    cloned_snaps = resource_selector.cloned_snapshots_set
+    print("Test - Cloned snapshots:", cloned_snaps)
+    assert all(snap.exists for snap in cloned_snaps)
 
-    assert len(remove_snaps) >= len(jails)
-    assert all(snap.exists is True for snap in remove_snaps)
+    remove_snaps = {
+        snap for jail in jails for snap in jail.recursive_snapshots
+    }
+    print("Test - Remove_snaps:", remove_snaps)
+    assert all(snap.exists for snap in remove_snaps)
+
+    filtered_remove_snaps = remove_snaps - cloned_snaps
+    print("Test - Filtered remove_snaps", filtered_remove_snaps)
 
     invoke_cli(
         ['snapremove', '-n', 'ALL', 'ALL', '--force']
     )
 
-    assert all(snap.exists is False for snap in remove_snaps)
+    assert all(snap.exists is False for snap in filtered_remove_snaps)

@@ -799,3 +799,15 @@ class ResourceSelector:
         return [
             j for j in self.all_jails if j.config.get(key, None) == value
         ]
+
+    @property
+    def cloned_snapshots_set(self):
+        cloned_jails = self.cloned_jails
+        origins = {
+            jail.root_dataset['properties']['origin']['value']
+            for jail in cloned_jails
+        }
+        return {
+            Snapshot(origin, origin.rsplit('@', 1)[0].split('/root', 1)[0])
+            for origin in origins
+        }
