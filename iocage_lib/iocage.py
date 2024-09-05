@@ -2211,15 +2211,17 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
             if cloned_datasets is None:
                 cloned_datasets = self._get_cloned_datasets()
             print("Cloned datasets =", cloned_datasets)
-            print("Snap list =", [s for s in self.snap_list(long=True)])
+            print("Snap list =", [s[0] for s in self.snap_list(long=True)])
             for snapshot, *_ in reversed(self.snap_list(long=True)):
                 if not snapshot.rsplit('@', 1)[0].endswith('/root'):
                     if snapshot in cloned_datasets:
+                        print("Skipped snapshot:", snapshot)
                         ioc_common.logit({
                                         'level': 'WARNING',
                                         'message': f"Skipped snapshot {snapshot}: used by clones."
                         })
                     else:
+                        print("Removing snapshot:", snapshot)
                         self.snap_remove(snapshot.rsplit('@', 1)[-1])
             return
         uuid, path = self.__check_jail_existence__()
