@@ -365,26 +365,22 @@ class Resource:
     DEFAULT_JSON_FILE = 'config.json'
 
     def __init__(self, name, zfs=None):
-        self.name = name
-        self.zfs = ZFS() if not zfs else zfs
+        super().__setattr__('name', name)
+        super().__setattr__('zfs', ZFS() if not zfs else zfs)
         assert isinstance(self.zfs, ZFS) is True
-        self.initialized = True
 
     def __eq__(self, other):
         return self.name == other.name
     
     def __hash__(self):
-        return hash(self.namr)
+        return hash(self.name)
     
     def __repr__(self):
         return self.name
 
     def __setattr__(self, name, attr_value):
-        if hasattr(self, 'initialized'):
-            raise AttributeError(f"Resources are immutable. Cannot set attribute '{name}'.")
-        else:
-            super().__setattr__(name, attr_value)
-        
+        raise AttributeError(f"Resources are immutable. Cannot set attribute '{name}'.")
+
     def __delattr__(self, name):
         raise AttributeError(f"Resources are immutable. Cannot delete attribute '{name}'.")
 
@@ -396,12 +392,12 @@ class Snapshot(Resource):
 
     def __init__(self, name, parent_dataset, zfs=None):
         super().__init__(name, zfs)
-        self.parent = parent_dataset
+        object.__setattr__(self, 'parent', parent_dataset)
         if isinstance(self.parent, str):
-            self.parent = Jail(self.parent)
+            object.__setattr__(self, 'parent', Jail(self.parent))
         if self.exists:
             for k, v in self.zfs.get_snapshot_safely(self.name).items():
-                setattr(self, k, v)
+                object.__setattr__(self, k, v)
 
     @property
     def exists(self):
