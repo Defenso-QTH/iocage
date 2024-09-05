@@ -2214,7 +2214,7 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
                 cloned_datasets = self._get_cloned_datasets()
             print("Cloned datasets =", cloned_datasets)
             print("Current jail =", self.jail)
-            print("Snap list =", [s for s in self.snap_list(long=False)])
+            print("Snap list =", [s for s in self.snap_list(long=True)])
             for snapshot, *_ in reversed(self.snap_list(long=False)):
                 if not '/' in snapshot:
                     if f"{self.jail}@{snapshot}" in cloned_datasets:
