@@ -2186,8 +2186,6 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         ioc_debug.IOCDebug(directory).run_debug()
 
     def _get_cloned_datasets(self):
-        print("Dependents =", list(Dataset(
-                                os.path.join(self.pool, 'iocage')).get_dependents(depth=2)))
         return {
                     d.properties.get('origin')
                     for d in Dataset(
@@ -2213,17 +2211,16 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
             if cloned_datasets is None:
                 cloned_datasets = self._get_cloned_datasets()
             print("Cloned datasets =", cloned_datasets)
-            print("Current jail =", self.jail)
             print("Snap list =", [s for s in self.snap_list(long=True)])
-            for snapshot, *_ in reversed(self.snap_list(long=False)):
-                if not '/' in snapshot:
-                    if f"{self.jail}@{snapshot}" in cloned_datasets:
+            for snapshot, *_ in reversed(self.snap_list(long=True)):
+                if not snapshot.rsplit('@', 1)[0].endswith('/root'):
+                    if snapshot in cloned_datasets:
                         ioc_common.logit({
                                         'level': 'WARNING',
-                                        'message': f"Skipped snapshot {self.jail}@{snapshot}: used by clones."
+                                        'message': f"Skipped snapshot {snapshot}: used by clones."
                         })
                     else:
-                        self.snap_remove(snapshot)
+                        self.snap_remove(snapshot.rsplit('@', 1)[-1])
             return
         uuid, path = self.__check_jail_existence__()
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
