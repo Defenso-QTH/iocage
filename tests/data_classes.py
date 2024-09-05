@@ -819,7 +819,7 @@ class ResourceSelector:
             jail.root_dataset['properties']['origin']['value']
             for jail in cloned_jails
         }
-        origins += {
+        origins |= {
             origin.replace('/root@', '@')
             for origin in origins
         }
