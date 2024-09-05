@@ -368,6 +368,7 @@ class Resource:
         self.name = name
         self.zfs = ZFS() if not zfs else zfs
         assert isinstance(self.zfs, ZFS) is True
+        self.initialized = True
 
     def __eq__(self, other):
         return self.name == other.name
@@ -379,7 +380,10 @@ class Resource:
         return self.name
 
     def __setattr__(self, name, attr_value):
-        raise AttributeError(f"Resources are immutable. Cannot set attribute '{name}'.")
+        if hasattr(self, 'initialized'):
+            raise AttributeError(f"Resources are immutable. Cannot set attribute '{name}'.")
+        else:
+            super().__setattr__(self, name, attr_value)
         
     def __delattr__(self, name):
         raise AttributeError(f"Resources are immutable. Cannot delete attribute '{name}'.")
