@@ -177,9 +177,10 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
     filtered_remove_snaps = remove_snaps - cloned_snaps
     print("Test - Filtered remove_snaps", filtered_remove_snaps)
 
-    invoke_cli(
+    result = invoke_cli(
         ['snapremove', '-n', 'ALL', 'ALL', '--force']
     )
+    print("Result:", result.output)
 
     assert all(snap.exists is False for snap in filtered_remove_snaps)
     assert all(snap.exists is True for snap in cloned_snaps)
