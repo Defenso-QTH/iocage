@@ -462,9 +462,7 @@ class Jail(Resource):
             release = '-'.join(self.release.rsplit('-')[:2])
 
         template = '-'
-        jail_origin = self.root_dataset[
-            'properties'
-        ].get('origin', {}).get('value')
+        jail_origin = self.root_dataset['properties']['origin']['value']
         if jail_origin:
             template = jail_origin.rsplit(
                 '/root@', 1
