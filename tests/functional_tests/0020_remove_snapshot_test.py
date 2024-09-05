@@ -154,6 +154,7 @@ def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
     print("Result:", result.output)
 
     assert all(snap.exists is False for snap in filtered_remove_snaps)
+    assert all(snap.exists is True for snap in cloned_snaps)
 
 
 @require_root
@@ -181,3 +182,4 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
     )
 
     assert all(snap.exists is False for snap in filtered_remove_snaps)
+    assert all(snap.exists is True for snap in cloned_snaps)
