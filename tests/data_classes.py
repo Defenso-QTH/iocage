@@ -383,7 +383,7 @@ class Resource:
         if hasattr(self, 'initialized'):
             raise AttributeError(f"Resources are immutable. Cannot set attribute '{name}'.")
         else:
-            super().__setattr__(self, name, attr_value)
+            super().__setattr__(name, attr_value)
         
     def __delattr__(self, name):
         raise AttributeError(f"Resources are immutable. Cannot delete attribute '{name}'.")
