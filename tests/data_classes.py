@@ -369,8 +369,20 @@ class Resource:
         self.zfs = ZFS() if not zfs else zfs
         assert isinstance(self.zfs, ZFS) is True
 
+    def __eq__(self, other):
+        return self.name == other.name
+    
+    def __hash__(self):
+        return hash(self.namr)
+    
     def __repr__(self):
         return self.name
+
+    def __setattr__(self, name, attr_value):
+        raise AttributeError(f"Resources are immutable. Cannot set attribute '{name}'.")
+        
+    def __delattr__(self, name):
+        raise AttributeError(f"Resources are immutable. Cannot delete attribute '{name}'.")
 
     def convert_to_row(self, **kwargs):
         raise NotImplemented
