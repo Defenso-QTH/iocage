@@ -14,7 +14,7 @@ iocage_tests_task:
         - pkg fetch -y rust
         - sed -E 's/([^<>=]+).*/py311-\1/' requirements.txt requirements-test.txt | xargs pkg fetch -y
   install_pkgs_script:
-    - pkg update -y
+    - pkg update
     - pkg install -y git python3 py311-sqlite3
   configure_python_script:
     - python3 -m ensurepip
