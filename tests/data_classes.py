@@ -825,6 +825,7 @@ class ResourceSelector:
             jail.jail_dataset['properties']['origin']['value']
             for jail in cloned_jails
         }
+        origins -= { None }
         return {
             Snapshot(origin, origin.rsplit('@', 1)[0])
             for origin in origins
