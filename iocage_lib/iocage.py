@@ -2198,12 +2198,11 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
 
     def snap_remove_all(self, snapshot):
         self._all = False
+        cloned_datasets=self._get_cloned_datasets()
         
         for jail in self.jails:
             self.jail = jail
-            self.snap_remove(snapshot,
-                cloned_datasets=self._get_cloned_datasets()
-            )
+            self.snap_remove(snapshot, cloned_datasets=cloned_datasets)
 
     def snap_remove(self, snapshot, cloned_datasets=None):
         """Removes user supplied snapshot from jail"""
@@ -2216,16 +2215,17 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
             print("** Cloned datasets =", cloned_datasets)
             print("** Snap list =", [s[0] for s in self.snap_list(long=True)])
             for snapshot, *_ in reversed(self.snap_list(long=True)):
-                if not snapshot.rsplit('@', 1)[0].endswith('/root'):
-                    if snapshot in cloned_datasets:
-                        print("** Skipped snapshot:", snapshot)
-                        ioc_common.logit({
-                                        'level': 'WARNING',
-                                        'message': f"Skipped snapshot {snapshot}: used by clones."
-                        })
-                    else:
-                        print("** Removing snapshot:", snapshot)
-                        self.snap_remove(snapshot.rsplit('@', 1)[-1])
+                if snapshot in cloned_datasets:
+                    print("** Skipped cloned snapshot:", snapshot)
+                    ioc_common.logit({
+                                    'level': 'WARNING',
+                                    'message': f"Skipped snapshot {snapshot}: used by clones."
+                    })
+                elif snapshot.rsplit('@', 1)[0].endswith('/root'):
+                    print("** Skipped root snapshot:", snapshot)
+                else:
+                    print("** Removing snapshot:", snapshot)
+                    self.snap_remove(snapshot.rsplit('@', 1)[-1])
             return
         uuid, path = self.__check_jail_existence__()
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
