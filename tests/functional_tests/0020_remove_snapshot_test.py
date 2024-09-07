@@ -165,8 +165,6 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
     skip_test(not jails)
 
     cloned_snaps = resource_selector.cloned_snapshots_set
-    for snap in cloned_snaps:
-        assert snap.exists is True
     assert all(snap.exists is True for snap in cloned_snaps)
 
     remove_snaps = {
@@ -188,6 +186,4 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
     )
 
     assert all(snap.exists is False for snap in filtered_remove_snaps)
-    for snap in cloned_snaps:
-            assert snap.exists is True
     assert all(snap.exists is True for snap in cloned_snaps)
