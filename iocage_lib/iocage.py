@@ -2186,14 +2186,14 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         ioc_debug.IOCDebug(directory).run_debug()
 
     def _get_cloned_datasets(self):
-        print("Dependents:", list(Dataset(
+        print("** Dependents:", list(Dataset(
                                 os.path.join(self.pool, 'iocage')
-                            ).get_dependents(depth=2)))
+                            ).get_dependents(depth=3)))
         return {
                     d.properties.get('origin')
                     for d in Dataset(
                         os.path.join(self.pool, 'iocage')
-                    ).get_dependents(depth=2)
+                    ).get_dependents(depth=3)
                 }
 
     def snap_remove_all(self, snapshot):
@@ -2213,18 +2213,18 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         if snapshot == 'ALL':
             if cloned_datasets is None:
                 cloned_datasets = self._get_cloned_datasets()
-            print("Cloned datasets =", cloned_datasets)
-            print("Snap list =", [s[0] for s in self.snap_list(long=True)])
+            print("** Cloned datasets =", cloned_datasets)
+            print("** Snap list =", [s[0] for s in self.snap_list(long=True)])
             for snapshot, *_ in reversed(self.snap_list(long=True)):
                 if not snapshot.rsplit('@', 1)[0].endswith('/root'):
                     if snapshot in cloned_datasets:
-                        print("Skipped snapshot:", snapshot)
+                        print("** Skipped snapshot:", snapshot)
                         ioc_common.logit({
                                         'level': 'WARNING',
                                         'message': f"Skipped snapshot {snapshot}: used by clones."
                         })
                     else:
-                        print("Removing snapshot:", snapshot)
+                        print("** Removing snapshot:", snapshot)
                         self.snap_remove(snapshot.rsplit('@', 1)[-1])
             return
         uuid, path = self.__check_jail_existence__()
