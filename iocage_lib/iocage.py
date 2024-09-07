@@ -2190,7 +2190,7 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
                                 os.path.join(self.pool, 'iocage')
                             ).get_dependents(depth=3)))
         return {
-                    d.properties.get('origin')
+                    d.properties.get('origin', "").replace('/root@', '@')
                     for d in Dataset(
                         os.path.join(self.pool, 'iocage')
                     ).get_dependents(depth=3)
