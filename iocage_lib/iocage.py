@@ -2186,9 +2186,6 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         ioc_debug.IOCDebug(directory).run_debug()
 
     def _get_cloned_datasets(self):
-        print("** Dependents:", list(Dataset(
-                                os.path.join(self.pool, 'iocage')
-                            ).get_dependents(depth=3)))
         return {
                     d.properties.get('origin', "").replace('/root@', '@')
                     for d in Dataset(
@@ -2212,11 +2209,8 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         if snapshot == 'ALL':
             if cloned_datasets is None:
                 cloned_datasets = self._get_cloned_datasets()
-            print("** Cloned datasets =", cloned_datasets)
-            print("** Snap list =", [s[0] for s in self.snap_list(long=True)])
             for snapshot, *_ in reversed(self.snap_list(long=True)):
                 if snapshot in cloned_datasets:
-                    print("** Skipped cloned snapshot:", snapshot)
                     ioc_common.logit({
                                     'level': 'WARNING',
                                     'message': f"Skipped snapshot {snapshot}: used by clones."
@@ -2224,7 +2218,6 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
                 elif snapshot.rsplit('@', 1)[0].endswith('/root'):
                     print("** Skipped root snapshot:", snapshot)
                 else:
-                    print("** Removing snapshot:", snapshot)
                     self.snap_remove(snapshot.rsplit('@', 1)[-1])
             return
         uuid, path = self.__check_jail_existence__()

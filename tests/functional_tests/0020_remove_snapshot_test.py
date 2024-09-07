@@ -138,11 +138,9 @@ def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
     skip_test(not snap_jail)
 
     remove_snaps = set(snap_jail.recursive_snapshots)
-    print("Test - Remove_snaps:", remove_snaps)
     assert all(snap.exists is True for snap in remove_snaps)
 
     cloned_snaps = resource_selector.cloned_snapshots_set
-    print("Test - Cloned snapshots:", cloned_snaps)
     assert all(snap.exists is True for snap in cloned_snaps)
 
     filtered_remove_snaps = remove_snaps - {
@@ -150,12 +148,10 @@ def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
             for snap in cloned_snaps
             for s in (snap.name.replace('/root@', '@'), snap.name)
             }
-    print("Test - Filtered remove_snaps", filtered_remove_snaps)
 
     result = invoke_cli(
         ['snapremove', '-n', 'ALL', snap_jail.name, '--force']
     )
-    print("Result:", result.output)
 
     assert all(snap.exists is False for snap in filtered_remove_snaps)
     assert all(snap.exists is True for snap in cloned_snaps)
@@ -169,7 +165,6 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
     skip_test(not jails)
 
     cloned_snaps = resource_selector.cloned_snapshots_set
-    print("Test - Cloned snapshots:", cloned_snaps)
     for snap in cloned_snaps:
         assert snap.exists is True
     assert all(snap.exists is True for snap in cloned_snaps)
@@ -177,7 +172,6 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
     remove_snaps = {
         snap for jail in jails for snap in jail.recursive_snapshots
     }
-    print("Test - Remove_snaps:", remove_snaps)
     assert all(snap.exists is True for snap in remove_snaps)
 
     # We want to keep cloned jail datasets, cloned root datasets,
@@ -188,12 +182,10 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
         for snap in cloned_snaps
         for s in (snap.name.replace('/root@', '@'), snap.name)
         }
-    print("Test - Filtered remove_snaps", filtered_remove_snaps)
 
     result = invoke_cli(
         ['snapremove', '-n', 'ALL', 'ALL', '--force']
     )
-    print("Result:", result.output)
 
     assert all(snap.exists is False for snap in filtered_remove_snaps)
     for snap in cloned_snaps:
