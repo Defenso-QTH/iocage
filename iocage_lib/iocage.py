@@ -1008,8 +1008,6 @@ class IOCage:
 
         freebsd_version = ioc_common.checkoutput(["freebsd-version"])
         arch = os.uname()[4]
-        
-        print("Fetch kwargs:", kwargs)
 
         if not _list:
             if not kwargs.get('files', None):
