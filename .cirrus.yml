@@ -5,8 +5,16 @@ iocage_tests_task:
   create_pool_script:
     - truncate -s 20G /root/poolfile
     - zpool create pool /root/poolfile
+  prepare_pkg_script:
+      - sed -i '' 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
+  pkg_cache:
+    folder: /var/cache/pkg
+    populate_script:
+        - pkg fetch -y git python3 py311-sqlite3 devel/py-libzfs
+        - pkg fetch -y rust
+        - sed -E 's/([^<>=]+).*/py311-\1/' requirements.txt requirements-test.txt | xargs pkg fetch -y
   install_pkgs_script:
-    - sed -i '' 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
+    - pkg update -y
     - pkg install -y git python3 py311-sqlite3
   configure_python_script:
     - python3 -m ensurepip
@@ -43,6 +51,8 @@ iocage_tests_task:
   env_setup_script:
     - mount -t fdescfs null /dev/fd
     - pkg install -y devel/py-libzfs
+  upload_caches:
+    - pkg
   install_iocage_script:
     - python3 setup.py install
   test_script: pytest --zpool=pool tests/functional_tests --file --root-dir=/usr/local/freebsd-img -rA
