@@ -145,7 +145,11 @@ def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
     print("Test - Cloned snapshots:", cloned_snaps)
     assert all(snap.exists is True for snap in cloned_snaps)
 
-    filtered_remove_snaps = remove_snaps - cloned_snaps
+    filtered_remove_snaps = remove_snaps - {
+            Snapshot(s.name, s.name.rsplit('@', 1)[0])
+            for snap in cloned_snaps
+            for s in (snap.name.replace('/root@', '@'), snap.name)
+            }
     print("Test - Filtered remove_snaps", filtered_remove_snaps)
 
     result = invoke_cli(
@@ -176,7 +180,14 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
     print("Test - Remove_snaps:", remove_snaps)
     assert all(snap.exists is True for snap in remove_snaps)
 
-    filtered_remove_snaps = remove_snaps - cloned_snaps
+    # We want to keep cloned jail datasets, cloned root datasets,
+    # and non-cloned jail datasets that contain cloned root datasets.
+    # This last case happens when creating jails from templates.
+    filtered_remove_snaps = remove_snaps - {
+        Snapshot(s.name, s.name.rsplit('@', 1)[0])
+        for snap in cloned_snaps
+        for s in (snap.name.replace('/root@', '@'), snap.name)
+        }
     print("Test - Filtered remove_snaps", filtered_remove_snaps)
 
     result = invoke_cli(
