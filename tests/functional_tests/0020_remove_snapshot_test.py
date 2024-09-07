@@ -139,7 +139,7 @@ def test_04_remove_all_snapshots_success(invoke_cli, resource_selector,
 
     remove_snaps = set(snap_jail.recursive_snapshots)
     print("Test - Remove_snaps:", remove_snaps)
-    assert all(snap.exists for snap in remove_snaps)
+    assert all(snap.exists is True for snap in remove_snaps)
 
     cloned_snaps = resource_selector.cloned_snapshots_set
     print("Test - Cloned snapshots:", cloned_snaps)
@@ -172,7 +172,7 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
         snap for jail in jails for snap in jail.recursive_snapshots
     }
     print("Test - Remove_snaps:", remove_snaps)
-    assert all(snap.existsis True for snap in remove_snaps)
+    assert all(snap.exists is True for snap in remove_snaps)
 
     filtered_remove_snaps = remove_snaps - cloned_snaps
     print("Test - Filtered remove_snaps", filtered_remove_snaps)
