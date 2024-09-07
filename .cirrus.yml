@@ -64,5 +64,5 @@ iocage_tests_task:
         NET_TEST: --dhcp
     - name: Static IP
       env:
-        NET_TEST: --jail-ip=192.168.13.37
+        NET_TEST: --jail_ip=192.168.13.37
   test_script: pytest --zpool=pool tests/functional_tests --file --root-dir=/usr/local/freebsd-img -rA --image $NET_TEST
