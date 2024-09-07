@@ -1559,7 +1559,6 @@ class IOCJson(IOCConfiguration):
                     # iocage legacy develop jail, not missing configuration
                     pass
                 else:
-                    traceback.print_exc()
                     iocage_lib.ioc_common.logit(
                         {
                             'level': 'EXCEPTION',
