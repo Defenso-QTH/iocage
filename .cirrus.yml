@@ -55,14 +55,4 @@ iocage_tests_task:
     - pkg
   install_iocage_script:
     - python3 setup.py install
-  matrix:
-    - name: NAT
-      env:
-        NET_TEST: --nat
-    - name: DHCP
-      env:
-        NET_TEST: --dhcp
-    - name: Static IP
-      env:
-        NET_TEST: --jail_ip=192.168.13.37
-  test_script: pytest --zpool=pool tests/functional_tests --file --root-dir=/usr/local/freebsd-img -rA --image $NET_TEST
+  test_script: pytest --zpool=pool tests/functional_tests --file --root-dir=/usr/local/freebsd-img -rA --image
