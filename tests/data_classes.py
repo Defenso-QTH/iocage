@@ -645,7 +645,7 @@ class Jail(Resource):
                     ].get('origin', {}).get('value')
         r = bool(o)
         if r:
-            print(f"- {self.jail} depends on {o}")
+            print(f"- {self.name} depends on {o}")
         return r
 
     @property
