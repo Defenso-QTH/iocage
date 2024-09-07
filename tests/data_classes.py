@@ -640,11 +640,13 @@ class Jail(Resource):
 
     @property
     def is_cloned(self):
-        return bool(
-            self.jail_dataset[
-                'properties'
-            ].get('origin', {}).get('value')
-        )
+        o = self.jail_dataset[
+                        'properties'
+                    ].get('origin', {}).get('value')
+        r = bool(o)
+        if r:
+            print(f"- {self.jail} depends on {o}")
+        return r
 
     @property
     def ips(self):
