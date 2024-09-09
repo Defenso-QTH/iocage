@@ -2209,14 +2209,17 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         if snapshot == 'ALL':
             if cloned_datasets is None:
                 cloned_datasets = self._get_cloned_datasets()
-            for snapshot, *_ in reversed(self.snap_list(long=True)):
+            for snapshot, *_ in reversed(self.snap_list()):
                 if snapshot in cloned_datasets:
                     ioc_common.logit({
                                     'level': 'WARNING',
                                     'message': f"Skipped snapshot {snapshot}: used by clones."
                     })
                 elif snapshot.rsplit('@', 1)[0].endswith('/root'):
-                    print("** Skipped root snapshot:", snapshot)
+                    # Deleting here would result in trying to delete
+                    # the jail dataset-level snapshot twice since we construct
+                    # the target based on the uuid, not path, below.
+                    continue
                 else:
                     self.snap_remove(snapshot.rsplit('@', 1)[-1])
             return
