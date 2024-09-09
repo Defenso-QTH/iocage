@@ -2215,8 +2215,6 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
                                     'level': 'WARNING',
                                     'message': f"Skipped snapshot {snapshot}: used by clones."
                     })
-                elif snapshot.rsplit('@', 1)[0].endswith('/root'):
-                    print("** Skipped root snapshot:", snapshot)
                 else:
                     self.snap_remove(snapshot.rsplit('@', 1)[-1])
             return
