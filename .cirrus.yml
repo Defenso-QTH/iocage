@@ -24,4 +24,8 @@ iocage_tests_task:
     - pkg install -y devel/py-libzfs
   install_iocage_script:
     - python3 setup.py install
-  test_script: pytest --zpool=pool tests/functional_tests
+  test_script: pytest --zpool=pool tests/functional_tests --junit-xml=reports/pytest-report.xml
+  always:
+    pytest_results_artifacts:
+      path: reports/*.xml
+      format: junit
