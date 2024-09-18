@@ -5,6 +5,7 @@ import threading
 
 from iocage_lib.zfs import (
     all_properties, dataset_exists, get_all_dependents, get_dependents_with_depth, IOCAGE_POOL_PROP,
+        IOCAGE_PREFIX_PROP,
 )
 
 
@@ -47,6 +48,9 @@ class Cache:
                     pools
                 ):
                     self.ioc_pool = p
+                self.ioc_prefix = self.dataset_data
+                    .get(self.ioc_pool, {})
+                    .get(IOCAGE_PREFIX_PROP, '')
             return self.ioc_pool
         finally:
             if lock:
@@ -58,7 +62,7 @@ class Cache:
             ioc_pool = self.iocage_activated_pool_internal(lock=False)
             if ioc_pool:
                 dependents = self.dependents_internal(ioc_pool, 1, lock=False)
-                ioc_ds = os.path.join(ioc_pool, ioc_pool.prefix, 'iocage')
+                ioc_ds = os.path.join(ioc_pool, self.ioc_prefix, 'iocage')
             if not self.ioc_dataset and ioc_pool and ioc_ds in dependents:
                 self.ioc_dataset = ioc_ds
             return self.ioc_dataset
