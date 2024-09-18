@@ -355,7 +355,7 @@ class IOCage:
 
         return stderr
 
-    def activate(self, zpool, prefix=None):
+    def activate(self, zpool, prefix=''):
         """Activates the zpool for iocage usage"""
         zpool = Pool(zpool, cache=False)
         if not zpool.exists:
