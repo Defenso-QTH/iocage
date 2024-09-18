@@ -553,7 +553,7 @@ class IOCConfiguration:
         pool = get_pool()
 
         def get_iocroot():
-            loc = Dataset(os.path.join(pool, pool.prefix, 'iocage'))
+            loc = Dataset(os.path.join(pool.name, pool.prefix, 'iocage'))
 
             if not loc.exists:
                 # It's okay, ioc check would create datasets
