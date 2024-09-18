@@ -32,7 +32,7 @@ __rootcmd__ = True
 
 @click.command(name="activate", help="Set a zpool active for iocage usage.")
 @click.option(
-    "--prefix", "-p", default=None,
+    "--prefix", "-p", default='',
     help="Provide a prefix for dataset path."
 )
 @click.argument("zpool")
