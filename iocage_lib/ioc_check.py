@@ -32,7 +32,7 @@ import iocage_lib.ioc_json
 
 from iocage_lib.cache import cache
 from iocage_lib.dataset import Dataset
-from iocage_lib.zfs import ZFSException
+from iocage_lib.zfs import ZFSException, IOCAGE_PREFIX_PROP
 
 DATASET_CREATION_LOCK = threading.Lock()
 
@@ -58,8 +58,9 @@ class IOCCheck(object):
         self.__check_datasets__()
 
         self.pool_root_dataset = Dataset(self.pool, cache=reset_cache)
+        prefix = self.pool_root_dataset.properties.get(IOCAGE_PREFIX_PROP, '')
         self.iocage_dataset = Dataset(
-            os.path.join(self.pool, self.pool.prefix, 'iocage'), cache=reset_cache
+            os.path.join(self.pool, prefix, 'iocage'), cache=reset_cache
         )
 
         if migrate:
