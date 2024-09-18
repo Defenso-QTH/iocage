@@ -32,7 +32,7 @@ class Pool(Resource):
     @property
     def prefix(self):
       return Dataset(self.name, cache=self.cache).properties.get(
-                  IOCAGE_PREFIX_PROP
+                  IOCAGE_PREFIX_PROP, ''
               )
     
     @property
