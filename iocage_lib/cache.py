@@ -48,9 +48,9 @@ class Cache:
                     pools
                 ):
                     self.ioc_pool = p
-                self.ioc_prefix = self.dataset_data
-                    .get(self.ioc_pool, {})
-                    .get(IOCAGE_PREFIX_PROP, '')
+                self.ioc_prefix = self.dataset_data.get(
+                        self.ioc_pool, {}
+                    ).get(IOCAGE_PREFIX_PROP, '')
             return self.ioc_pool
         finally:
             if lock:
