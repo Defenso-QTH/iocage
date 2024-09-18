@@ -74,7 +74,7 @@ class Cache:
             if not self.dataset_data or set(self.dataset_data) == set(self.pool_data):
                 ds = ''
                 if ioc_pool:
-                    ds = os.path.join(ioc_pool, ioc_pool.prefix, 'iocage')
+                    ds = os.path.join(ioc_pool, self.ioc_prefix, 'iocage')
                 self.dataset_data.update(all_properties(
                     [ds] if ds and dataset_exists(ds) else [], recursive=True, types=['filesystem']
                 ))

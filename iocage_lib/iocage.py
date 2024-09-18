@@ -372,7 +372,8 @@ class IOCage:
                 locked_error = None
                 if pool.root_dataset.locked:
                     locked_error = f'ZFS pool "{zpool}" root dataset is locked'
-
+                print("zpool.name", zpool.name)
+                print("prefix", prefix)
                 iocage_ds = Dataset(os.path.join(zpool.name, prefix, 'iocage'))
                 if iocage_ds.exists and iocage_ds.locked:
                     locked_error = f'ZFS dataset "{iocage_ds.name}" is locked'
