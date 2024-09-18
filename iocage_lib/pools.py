@@ -2,7 +2,8 @@ from iocage_lib.cache import cache
 from iocage_lib.ioc_exceptions import PoolNotActivated
 from iocage_lib.resource import Resource, ListableResource
 from iocage_lib.zfs import (
-    list_pools, IOCAGE_POOL_PROP, get_dependents
+    list_pools, IOCAGE_POOL_PROP,
+    IOCAGE_PREFIX_PROP, get_dependents
 )
 
 import iocage_lib.dataset as dataset
