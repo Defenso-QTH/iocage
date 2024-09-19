@@ -652,12 +652,14 @@ class IOCFetch:
 
     def fetch_download(self, _list, missing=False):
         """Creates the download dataset and then downloads the RELEASE."""
-        dataset = f"{self.iocroot}/download/{self.release}"
+        release_dir = f"{self.iocroot}/download/{self.release}"
         fresh = False
 
-        if not os.path.isdir(dataset):
+        if not os.path.isdir(release_dir):
             fresh = True
-            dataset = f"{self.iocroot}/download/{self.release}"
+            dataset = os.path.join(
+                self.zpool.name, self.zpool.prefix, 'download', self.release
+            )
 
             ds = Dataset(dataset)
             if not ds.exists:
