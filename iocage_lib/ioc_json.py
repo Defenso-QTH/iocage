@@ -553,6 +553,8 @@ class IOCConfiguration:
         pool = get_pool()
 
         def get_iocroot():
+            print("pool.name:", pool.name)
+            print("pool.prefix:", pool.prefix)
             loc = Dataset(os.path.join(pool.name, pool.prefix, 'iocage'))
 
             if not loc.exists:
