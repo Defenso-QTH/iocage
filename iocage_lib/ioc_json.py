@@ -568,7 +568,7 @@ class IOCConfiguration:
                     },
                     _callback=self.callback,
                     silent=self.silent)
-
+        print("get_iocroot=", get_iocroot())
         return pool.name, get_iocroot()
 
     @staticmethod
