@@ -808,7 +808,10 @@ class IOCFetch:
         src = f"{self.iocroot}/download/{self.release}/{f}"
         dest = f"{self.iocroot}/releases/{self.release}/root"
 
-        dataset = f"{self.iocroot}/releases/{self.release}/root"
+        dataset = os.path.join(
+            self.zpool.name, self.zpool.prefix, 'iocage',
+            'releases', self.release, 'root'
+        )
 
         if not os.path.isdir(dest):
             self.zpool.create_dataset({
