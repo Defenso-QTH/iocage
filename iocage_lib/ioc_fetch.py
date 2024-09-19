@@ -658,7 +658,8 @@ class IOCFetch:
         if not os.path.isdir(release_dir):
             fresh = True
             dataset = os.path.join(
-                self.zpool.name, self.zpool.prefix, 'download', self.release
+                self.zpool.name, self.zpool.prefix, 'iocage',
+                'download', self.release
             )
 
             ds = Dataset(dataset)
