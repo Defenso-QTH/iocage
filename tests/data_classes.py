@@ -298,7 +298,7 @@ class ZFS:
 
                     ZFS.pool = pools[0].name
                     ZFS.pool_mountpoint = pools[0].root_dataset.mountpoint
-                    ZFS.prefix = pools[0].root_dataset.__getstate__().get('properties').get('org.freebsd.ioc:prefix', {}).get('value')
+                    ZFS.prefix = pools[0].root_dataset.__getstate__().get('properties').get('org.freebsd.ioc:prefix', {}).get('value', '')
 
     @staticmethod
     def get(identifier):
