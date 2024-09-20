@@ -319,13 +319,16 @@ class IOCCreate(object):
                 config[k] = v
         else:
             if not self.empty:
-                dataset = f'{self.iocroot}/releases/{self.release}/' \
-                    f'root@{jail_uuid}'
+                dataset = os.path.join(
+                    self.zpool.name, self.zpool.prefix, 'iocage',
+                    'releases', self.release, f'root@{jail_uuid}'
+                )
                 try:
                     su.check_call(['zfs', 'snapshot', dataset], stderr=su.PIPE)
                 except su.CalledProcessError:
                     release = os.path.join(
-                        self.iocroot, 'releases', self.release
+                        self.zpool.name, self.zpool.prefix, 'iocage',
+                        'releases', self.release
                     )
                     if not Dataset(release).exists:
                         raise RuntimeError(
