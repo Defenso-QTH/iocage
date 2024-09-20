@@ -94,6 +94,7 @@ class IOCage:
         if not activate:
             self.generic_iocjson = ioc_json.IOCJson()
             self.pool = self.generic_iocjson.pool
+            self.zpool = Pool(self.pool)
             self.iocroot = self.generic_iocjson.iocroot
 
             if not skip_jails:
@@ -1394,7 +1395,10 @@ class IOCage:
                 silent=self.silent)
 
         path = f"{self.iocroot}/{_folders[0]}/{uuid}"
-        new_path = f"{self.iocroot}/{_folders[0]}/{new_name}"
+        new_path = os.path.join(
+            self.zpool.name, self.zpool.prefix, 'iocage',
+            _folders[0], new_name
+        )
 
         _silent = self.silent
         self.silent = True
