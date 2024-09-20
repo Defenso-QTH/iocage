@@ -220,7 +220,10 @@ class IOCCreate(object):
                 clone_etc_hosts = \
                     f"{self.iocroot}/jails/{jail_uuid}/root/etc/hosts"
 
-        jail = f"{self.iocroot}/jails/{jail_uuid}/root"
+        jail = os.path.join(
+            self.zpool.name, self.zpool.prefix, 'iocage',
+            'jails', jail_uuid, 'root'
+        )
 
         if self.template:
             source = os.path.join(
