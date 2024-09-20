@@ -1798,7 +1798,10 @@ class IOCJson(IOCConfiguration):
 
             if key == "template":
                 old_location = f"{self.iocroot}/jails/{uuid}"
-                new_location = f"{self.iocroot}/templates/{uuid}"
+                new_location = os.path.join(
+                    self.zpool.name, self.zpool.prefix, 'iocage',
+                    'templates', uuid
+                )
 
                 if status:
                     iocage_lib.ioc_common.logit(
