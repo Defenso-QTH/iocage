@@ -223,7 +223,10 @@ class IOCCreate(object):
         jail = f"{self.iocroot}/jails/{jail_uuid}/root"
 
         if self.template:
-            source = f'{self.iocroot}/templates/{self.release}@{jail_uuid}'
+            source = os.path.join(
+                self.zpool.name, self.zpool.prefix, 'iocage',
+                'templates', f'{self.release}@{jail_uuid}'
+            )
             snap_cmd = ['zfs', 'snapshot', '-r', source]
 
             if self.thickjail:
@@ -257,7 +260,10 @@ class IOCCreate(object):
                 # Thick jails won't have this
                 pass
         elif self.clone:
-            source = f'{self.iocroot}/jails/{self.release}@{jail_uuid}'
+            source = os.path.join(
+                self.zpool.name, self.zpool.prefix, 'iocage',
+                'jails', f'{self.release}@{jail_uuid}'
+            )
             snap_cmd = ['zfs', 'snapshot', '-r', source]
 
             if self.thickjail:
@@ -371,7 +377,11 @@ class IOCCreate(object):
         if jail_uuid == "default" or jail_uuid == "help":
             iocage_lib.ioc_destroy.IOCDestroy(
             ).__destroy_parse_datasets__(
-                f"{self.iocroot}/jails/{jail_uuid}")
+                os.path.join(
+                    self.zpool.name, self.zpool.prefix, 'iocage',
+                    'jails', jail_uuid
+                )
+            )
             iocage_lib.ioc_common.logit({
                 "level": "EXCEPTION",
                 "message": f"You cannot name a jail {jail_uuid}, "
@@ -537,7 +547,10 @@ class IOCCreate(object):
         # If jail is template, the dataset would be readonly at this point
         if is_template:
             Dataset(
-                os.path.join(self.iocroot, 'templates', jail_uuid)
+                os.path.join(
+                    self.zpool.name, self.zpool.prefix, 'iocage',
+                    'templates', jail_uuid
+                )
             ).set_property('readonly', 'off')
 
         if self.empty:
@@ -1052,7 +1065,10 @@ ipv6_activate_all_interfaces=\"YES\"
                 ['umount', '-F', f'{location}/fstab', '-a']).communicate()
 
     def create_thickjail(self, jail_uuid, source):
-        jail = f"{self.iocroot}/jails/{jail_uuid}"
+        jail = os.path.join(
+            self.zpool.name, self.zpool.prefix, 'iocage',
+            'jails', jail_uuid
+        )
 
         try:
             su.Popen(['zfs', 'create', '-p', jail],
