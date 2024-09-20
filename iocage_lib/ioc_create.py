@@ -43,6 +43,7 @@ import dns.exception
 import shutil
 
 from iocage_lib.cache import cache
+from iocage_lib.pools import Pool
 from iocage_lib.dataset import Dataset
 
 
@@ -59,6 +60,7 @@ class IOCCreate(object):
         self.pool = iocage_lib.ioc_json.IOCJson().json_get_value("pool")
         self.iocroot = iocage_lib.ioc_json.IOCJson(self.pool).json_get_value(
             "iocroot")
+        self.zpool = Pool(self.pool)
         self.release = release
         self.props = props
         self.num = num
