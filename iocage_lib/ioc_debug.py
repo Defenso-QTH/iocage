@@ -158,7 +158,6 @@ class IOCDebug(object):
 
     def __write_debug__(self, data, path, title, json=False, method='a+'):
         title_sep = '-' * 10
-        print('path=', path)
 
         with open(f'{path}.txt', method) as f:
             f.write(title)

@@ -37,7 +37,6 @@ def test_01_debug(invoke_cli):
     invoke_cli(
         ['debug']
     )
-    assert 0 == 1
 
 
 @require_root
