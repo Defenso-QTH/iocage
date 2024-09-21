@@ -308,7 +308,7 @@ class IOCImage(object):
         try:
             target = os.path.join(
                 self.zpool.name, self.zpool.prefix, 'iocage',
-                'jails', f"{uuid}@ioc-export-{date}""
+                'jails', f"{uuid}@ioc-export-{date}"
             )
 
             iocage_lib.ioc_common.checkoutput(
