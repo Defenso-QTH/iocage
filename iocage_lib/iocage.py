@@ -1752,7 +1752,10 @@ class IOCage:
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
 
         if ioc_common.check_truthy(conf['template']):
-            target = f"{self.iocroot}/templates/{uuid}"
+            target = os.path.join(
+                self.zpool.name, self.zpool.prefix, 'iocage',
+                'templates', uuid
+            )
         else:
             target = os.path.join(
                 self.zpool.name, self.zpool.prefix, 'iocage',
