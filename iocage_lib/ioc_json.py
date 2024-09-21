@@ -427,6 +427,7 @@ class IOCConfiguration:
         self.json_version = self.get_version()
         self.mac_prefix = self.get_mac_prefix()
         self.pool, self.iocroot = self.get_pool_and_iocroot()
+        self.zpool = Pool(self.pool)
 
         if not checking_datasets:
             self.default_config = self.check_default_config()
