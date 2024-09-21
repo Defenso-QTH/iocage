@@ -101,8 +101,9 @@ def iocage_activated_pool():
 def iocage_activated_dataset():
     pool = iocage_activated_pool()
     if pool:
-        if os.path.join(pool, pool.prefix, 'iocage') in get_dependents(pool):
-            return os.path.join(pool, pool.prefix, 'iocage')
+        prefix = dataset_properties(pool).get(IOCAGE_PREFIX_PROP, '')
+        if os.path.join(pool, prefix, 'iocage') in get_dependents(pool):
+            return os.path.join(pool, prefix, 'iocage')
 
     return None
 
