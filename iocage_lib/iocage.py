@@ -2237,9 +2237,15 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
         conf = ioc_json.IOCJson(path, silent=self.silent).json_get_value('all')
 
         if ioc_common.check_truthy(conf['template']):
-            target = f'{self.iocroot}/templates/{uuid}@{snapshot}'
+            target = os.path.join(
+                self.zpool.name, self.zpool.prefix, 'iocage',
+                'templates', f"{uuid}@{snapshot}"
+            )
         else:
-            target = f'{self.iocroot}/jails/{uuid}@{snapshot}'
+            target = os.path.join(
+                self.zpool.name, self.zpool.prefix, 'iocage',
+                'jails', f"{uuid}@{snapshot}"
+            )
 
         # Let's verify target exists and then destroy it, else log it
         snapshot = Snapshot(target)
