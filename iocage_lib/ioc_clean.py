@@ -27,6 +27,7 @@ import iocage_lib.ioc_common
 import iocage_lib.ioc_destroy
 import iocage_lib.ioc_json
 import shutil
+import os
 
 from iocage_lib.dataset import Dataset
 from iocage_lib.pools import Pool
