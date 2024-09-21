@@ -1754,7 +1754,10 @@ class IOCage:
         if ioc_common.check_truthy(conf['template']):
             target = f"{self.iocroot}/templates/{uuid}"
         else:
-            target = f"{self.iocroot}/jails/{uuid}"
+            target = os.path.join(
+                self.zpool.name, self.zpool.prefix, 'iocage',
+                'jails', uuid
+            )
 
         snap = Snapshot(f'{target}@{name}')
         if snap.exists:
