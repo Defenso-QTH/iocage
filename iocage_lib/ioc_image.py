@@ -160,7 +160,7 @@ class IOCImage(object):
         try:
             target = os.path.join(
                 self.zpool.name, self.zpool.prefix, 'iocage',
-                'jails', f'{uuid}@ioc-export-{self.date}"
+                'jails', f"{uuid}@ioc-export-{self.date}"
             )
             iocage_lib.ioc_common.checkoutput(
                 ["zfs", "destroy", "-r", target], stderr=su.STDOUT)
