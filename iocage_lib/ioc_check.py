@@ -91,7 +91,11 @@ class IOCCheck(object):
                     "iocage/jails", "iocage/log", "iocage/releases",
                     "iocage/templates")
         if self.zpool.prefix != '':
-            datasets = *self.zpool.prefix.split('/'), *(
+            prefix_split = self.zpool.prefix.split('/')
+            datasets = *(
+                os.path.join(prefix_split[:n+1])
+                for n in range(len(prefix_split))
+            ), *(
                 os.path.join(self.zpool.prefix, ioc_ds) for ioc_ds in datasets
             )
 
