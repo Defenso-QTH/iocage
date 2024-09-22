@@ -1873,7 +1873,7 @@ class IOCJson(IOCConfiguration):
                     ).replace(
                         "/iocage", self.iocroot
                     )
-                    print('location=', location)
+                    print('location=', self.location)
 
                     iocage_lib.ioc_common.logit(
                         {
@@ -1900,7 +1900,7 @@ class IOCJson(IOCConfiguration):
                         ).replace(
                             "/iocage", self.iocroot
                         )
-                        print('location 1903=', location)
+                        print('location 1903=', self.location)
                         ds.set_property('readonly', 'off')
 
                         self.json_check_prop(key, value, conf, default)
