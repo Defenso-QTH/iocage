@@ -1796,7 +1796,10 @@ class IOCJson(IOCConfiguration):
             ]
 
             if key == "template":
-                old_location = f"{self.iocroot}/jails/{uuid}"
+                old_location = os.path.join(
+                    self.zpool.name, self.zpool.prefix, 'iocage',
+                    'jails', uuid
+                )
                 new_location = os.path.join(
                     self.zpool.name, self.zpool.prefix, 'iocage',
                     'templates', uuid
@@ -1848,7 +1851,8 @@ class IOCJson(IOCConfiguration):
 
                 if iocage_lib.ioc_common.check_truthy(value):
                     jail_zfs_dataset = os.path.join(
-                        self.pool, conf['jail_zfs_dataset']
+                        self.zpool, self.zpool.prefix,
+                        conf['jail_zfs_dataset']
                     )
                     jail_zfs_dataset_obj = Dataset(jail_zfs_dataset)
                     if jail_zfs_dataset_obj.exists:
