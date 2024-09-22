@@ -93,7 +93,7 @@ class IOCCheck(object):
         if self.zpool.prefix != '':
             prefix_split = self.zpool.prefix.split('/')
             datasets = *(
-                os.path.join(prefix_split[:n+1])
+                os.path.join(*prefix_split[:n+1])
                 for n in range(len(prefix_split))
             ), *(
                 os.path.join(self.zpool.prefix, ioc_ds) for ioc_ds in datasets
