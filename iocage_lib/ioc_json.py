@@ -1800,10 +1800,12 @@ class IOCJson(IOCConfiguration):
                     self.zpool.name, self.zpool.prefix, 'iocage',
                     'jails', uuid
                 )
+                print('old_location=', old_location)
                 new_location = os.path.join(
                     self.zpool.name, self.zpool.prefix, 'iocage',
                     'templates', uuid
                 )
+                print('new_location=', new_location)
 
                 if status:
                     iocage_lib.ioc_common.logit(
@@ -1854,6 +1856,7 @@ class IOCJson(IOCConfiguration):
                         self.zpool.name, self.zpool.prefix,
                         conf['jail_zfs_dataset']
                     )
+                    print('conf jail_zfs_dataset=', conf['jail_zfs_dataset'])
                     jail_zfs_dataset_obj = Dataset(jail_zfs_dataset)
                     if jail_zfs_dataset_obj.exists:
                         jail_zfs_dataset_obj.set_property('jailed', 'off')
@@ -1870,6 +1873,7 @@ class IOCJson(IOCConfiguration):
                     ).replace(
                         "/iocage", self.iocroot
                     )
+                    print('location=', location)
 
                     iocage_lib.ioc_common.logit(
                         {
@@ -1896,6 +1900,7 @@ class IOCJson(IOCConfiguration):
                         ).replace(
                             "/iocage", self.iocroot
                         )
+                        print('location 1903=', location)
                         ds.set_property('readonly', 'off')
 
                         self.json_check_prop(key, value, conf, default)
