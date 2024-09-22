@@ -1851,7 +1851,7 @@ class IOCJson(IOCConfiguration):
 
                 if iocage_lib.ioc_common.check_truthy(value):
                     jail_zfs_dataset = os.path.join(
-                        self.zpool, self.zpool.prefix,
+                        self.zpool.name, self.zpool.prefix,
                         conf['jail_zfs_dataset']
                     )
                     jail_zfs_dataset_obj = Dataset(jail_zfs_dataset)
