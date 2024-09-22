@@ -715,7 +715,10 @@ class IOCCreate(object):
         if is_template:
             # We have to set readonly back, since we're done with our tasks
             Dataset(
-                os.path.join(self.iocroot, 'templates', jail_uuid)
+                os.path.join(
+                    self.zpool.name, self.zpool.prefix, 'iocage',
+                    'templates', jail_uuid
+                )
             ).set_property('readonly', 'on')
 
         return jail_uuid
