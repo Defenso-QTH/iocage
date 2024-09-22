@@ -1862,9 +1862,7 @@ class IOCJson(IOCConfiguration):
                     conf["type"] = "template"
 
                     self.location = new_location.lstrip(
-                        self.zpool.name
-                    ).lstrip(
-                        self.zpool.prefix
+                        os.path.join(self.zpool.name, self.zpool.prefix)
                     ).replace(
                         "/iocage", self.iocroot
                     )
@@ -1889,8 +1887,11 @@ class IOCJson(IOCConfiguration):
                         ds = Dataset(new_location)
                         ds.rename(old_location, {'force_unmount': True})
                         conf["type"] = "jail"
-                        self.location = old_location.lstrip(self.pool).replace(
-                            "/iocage", self.iocroot)
+                        self.location = old_location.lstrip(
+                            os.path.join(self.zpool.name, self.zpool.prefix)
+                        ).replace(
+                            "/iocage", self.iocroot
+                        )
                         ds.set_property('readonly', 'off')
 
                         self.json_check_prop(key, value, conf, default)
