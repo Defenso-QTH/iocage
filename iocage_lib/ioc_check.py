@@ -51,6 +51,7 @@ class IOCCheck(object):
             silent=silent,
             checking_datasets=True
         ).json_get_value("pool")
+        self.zpool = Pool(self.pool)
         self.callback = callback
         self.silent = silent
 
@@ -58,9 +59,9 @@ class IOCCheck(object):
         self.__check_datasets__()
 
         self.pool_root_dataset = Dataset(self.pool, cache=reset_cache)
-        self.prefix = self.pool_root_dataset.properties.get(IOCAGE_PREFIX_PROP, '')
         self.iocage_dataset = Dataset(
-            os.path.join(self.pool, self.prefix, 'iocage'), cache=reset_cache
+            os.path.join(self.zpool.name, self.zpool.prefix, 'iocage'),
+            cache=reset_cache
         )
 
         if migrate:
@@ -88,9 +89,9 @@ class IOCCheck(object):
         datasets = ("iocage", "iocage/download", "iocage/images",
                     "iocage/jails", "iocage/log", "iocage/releases",
                     "iocage/templates")
-        if self.prefix != '':
+        if self.zpool.prefix != '':
             datasets = (
-                os.path.join(self.prefix, ioc_ds) for ioc_ds in datasets
+                os.path.join(self.zpool.prefix, ioc_ds) for ioc_ds in datasets
             )
 
         for dataset in datasets:
