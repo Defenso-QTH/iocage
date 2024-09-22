@@ -635,6 +635,7 @@ class IOCConfiguration:
 
         if template:
             try:
+                print('jail_dataset=', jail_dataset)
                 su.check_call(['zfs', 'set', 'readonly=off', jail_dataset])
             except su.CalledProcessError:
                 iocage_lib.ioc_common.logit(
