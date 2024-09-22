@@ -1861,8 +1861,13 @@ class IOCJson(IOCConfiguration):
 
                     conf["type"] = "template"
 
-                    self.location = new_location.lstrip(self.pool).replace(
-                        "/iocage", self.iocroot)
+                    self.location = new_location.lstrip(
+                        self.zpool.name
+                    ).lstrip(
+                        self.zpool.prefix
+                    ).replace(
+                        "/iocage", self.iocroot
+                    )
 
                     iocage_lib.ioc_common.logit(
                         {
