@@ -1873,6 +1873,12 @@ class IOCJson(IOCConfiguration):
                     ).replace(
                         "/iocage", self.iocroot
                     )
+                    print('new_location=', new_location)
+                    print('lstrip=', new_location.lstrip(
+                            os.path.join(self.zpool.name, self.zpool.prefix)
+                        )
+                    )
+                    print('iocroot=', self.iocroot)
                     print('location=', self.location)
 
                     iocage_lib.ioc_common.logit(
