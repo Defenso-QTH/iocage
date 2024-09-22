@@ -32,6 +32,7 @@ import iocage_lib.ioc_json
 
 from iocage_lib.cache import cache
 from iocage_lib.dataset import Dataset
+from iocage_lib.pools import Pool
 from iocage_lib.zfs import ZFSException, IOCAGE_PREFIX_PROP
 
 DATASET_CREATION_LOCK = threading.Lock()
