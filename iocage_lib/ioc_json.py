@@ -1869,12 +1869,12 @@ class IOCJson(IOCConfiguration):
                     conf["type"] = "template"
 
                     if self.zpool.prefix ==  '':
-                        self.location = new_location.lstrip(self.pool)
+                        self.location = new_location.removeprefix(self.pool)
                     else:
-                        self.location = new_location.lstrip(
+                        self.location = new_location.removeprefix(
                         os.path.join(self.zpool.name, self.zpool.prefix)
                         )
-                        print('lstrip pattern=', os.path.join(self.zpool.name, self.zpool.prefix))
+                        print('removeprefix pattern=', os.path.join(self.zpool.name, self.zpool.prefix))
                     print('stripped loc=', self.location)
                     self.location = self.location.replace(
                         "/iocage", self.iocroot
@@ -1903,9 +1903,9 @@ class IOCJson(IOCConfiguration):
                         ds.rename(old_location, {'force_unmount': True})
                         conf["type"] = "jail"
                         if self.zpool.prefix == '':
-                            self.location = old_location.lstrip(self.pool)
+                            self.location = old_location.removeprefix(self.pool)
                         else:
-                            self.location = old_location.lstrip(
+                            self.location = old_location.removeprefix(
                             os.path.join(self.zpool.name, self.zpool.prefix)
                             )
                         self.location = self.location.replace(
