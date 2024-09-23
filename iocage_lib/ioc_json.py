@@ -1878,7 +1878,7 @@ class IOCJson(IOCConfiguration):
                         "/iocage", self.iocroot
                     )
                     print('new_location=', new_location)
-                    print('location=', location)
+                    print('location=', self.location)
 
                     iocage_lib.ioc_common.logit(
                         {
