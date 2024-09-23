@@ -2206,6 +2206,7 @@ Remove the snapshot: ioc_upgrade_{_date} if everything is OK
     def snap_remove_all(self, snapshot):
         self._all = False
         cloned_datasets=self._get_cloned_datasets()
+        print('cloned_datasets=', cloned_datasets)
         
         for jail in self.jails:
             self.jail = jail
