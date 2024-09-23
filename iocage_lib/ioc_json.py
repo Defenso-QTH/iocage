@@ -1874,7 +1874,7 @@ class IOCJson(IOCConfiguration):
                         self.location = new_location.lstrip(
                         os.path.join(self.zpool.name, self.zpool.prefix)
                         )
-                        print('lstrip pattern=', os.path.join(self.zpool.name, self.zpool.prefix)))
+                        print('lstrip pattern=', os.path.join(self.zpool.name, self.zpool.prefix))
                     print('stripped loc=', self.location)
                     self.location = self.location.replace(
                         "/iocage", self.iocroot
