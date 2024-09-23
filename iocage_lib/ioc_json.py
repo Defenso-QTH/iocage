@@ -1868,18 +1868,17 @@ class IOCJson(IOCConfiguration):
 
                     conf["type"] = "template"
 
-                    self.location = new_location.lstrip(
+                    if self.zpool.prefix ==  '':
+                        self.location = new_location.lstrip(self.pool)
+                    else:
+                        self.location = new_location.lstrip(
                         os.path.join(self.zpool.name, self.zpool.prefix)
-                    ).replace(
+                        )
+                    self.location = self.location.replace(
                         "/iocage", self.iocroot
                     )
                     print('new_location=', new_location)
-                    print('lstrip=', new_location.lstrip(
-                            os.path.join(self.zpool.name, self.zpool.prefix)
-                        )
-                    )
-                    print('iocroot=', self.iocroot)
-                    print('location=', self.location)
+                    print('location=', location)
 
                     iocage_lib.ioc_common.logit(
                         {
@@ -1901,12 +1900,16 @@ class IOCJson(IOCConfiguration):
                         ds = Dataset(new_location)
                         ds.rename(old_location, {'force_unmount': True})
                         conf["type"] = "jail"
-                        self.location = old_location.lstrip(
+                        if self.zpool.prefix == '':
+                            self.location = old_location.lstrip(self.pool)
+                        else:
+                            self.location = old_location.lstrip(
                             os.path.join(self.zpool.name, self.zpool.prefix)
-                        ).replace(
+                            )
+                        self.location = self.location.replace(
                             "/iocage", self.iocroot
                         )
-                        print('location 1903=', self.location)
+                        print('location 1912=', self.location)
                         ds.set_property('readonly', 'off')
 
                         self.json_check_prop(key, value, conf, default)
