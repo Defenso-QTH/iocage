@@ -186,6 +186,4 @@ def test_05_remove_all_snapshots_all_jails(invoke_cli, resource_selector,
     )
 
     assert all(snap.exists is False for snap in filtered_remove_snaps)
-    #assert all(snap.exists is True for snap in cloned_snaps)
-    for snap in cloned_snaps:
-            assert snap.exists is True
+    assert all(snap.exists is True for snap in cloned_snaps)
