@@ -509,7 +509,6 @@ class Jail(Resource):
     @property
     def path(self):
         # Jail can be either under `jails` or `templates` datasets
-        print('prefix=', self.zfs.prefix)
         if self.zfs.get_dataset(os.path.join(self.zfs.pool, self.zfs.prefix, 'iocage/jails', self.name)
         ):
             dataset = 'jails'
