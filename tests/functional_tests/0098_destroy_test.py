@@ -62,4 +62,19 @@ def test_02_destroy_jails(invoke_cli, resource_selector, skip_test):
         assert jail.exists is False
 
 
+@require_root
+@require_zpool
+def test_03_destroy_release(invoke_cli, skip_test, resource_selector):
+    releases = resource_selector.releases
+    skip_test(not releases)
+
+    release = releases[0]
+    assert release.exists is True
+
+    invoke_cli(
+        ['destroy', '-fr', release]
+    )
+
+    assert release.exists is False
+
 # TODO: Add tests for release and download later - fetching is time consuming :P
