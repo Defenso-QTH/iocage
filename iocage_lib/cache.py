@@ -6,6 +6,8 @@ import threading
 from iocage_lib.zfs import (
     all_properties, dataset_exists, get_all_dependents, get_dependents_with_depth, IOCAGE_POOL_PROP,
         IOCAGE_PREFIX_PROP,
+        IOCAGE_POOL_SETTING,
+        get_sysrc
 )
 
 
@@ -30,6 +32,9 @@ class Cache:
 
     @property
     def iocage_activated_pool(self):
+        sysrc_pool = get_sysrc(IOCAGE_POOL_SETTING)
+        if sysrc_pool is not None:
+            return sysrc_pool
         return self.iocage_activated_pool_internal()
 
     def iocage_activated_pool_internal(self, lock=True):

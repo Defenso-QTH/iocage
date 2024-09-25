@@ -4,7 +4,6 @@ import subprocess
 
 from collections import defaultdict
 
-
 def run(command, **kwargs):
     kwargs.setdefault('stdout', subprocess.PIPE)
     kwargs.setdefault('stderr', subprocess.PIPE)
@@ -23,6 +22,14 @@ def run(command, **kwargs):
     return cp
 
 
+def get_sysrc(setting):
+    cp = run(['sysrc', f'iocage_{setting}'], check=False)
+    if cp.returncode == 0:
+        return cp.stdout.split(':').lstrip()
+    else:
+        return None
+
+
 class ZFSException(Exception):
     def __init__(self, code, message):
         super(Exception, self).__init__(message)
@@ -34,6 +41,10 @@ class ZFSException(Exception):
 
 IOCAGE_POOL_PROP = 'org.freebsd.ioc:active'
 IOCAGE_PREFIX_PROP = 'org.freebsd.ioc:prefix'
+
+IOCAGE_POOL_SETTING = 'zfs_pool'
+IOCAGE_PREFIX_SETTING = 'zfs_prefix'
+
 
 def list_pools():
     return list(filter(
@@ -91,6 +102,9 @@ def pool_properties(pool):
 
 
 def iocage_activated_pool():
+    sysrc_pool= get_sysrc(IOCAGE_POOL_SETTING)
+    if pool_setting is not None:
+        return sysrc_pool
     for pool in list_pools():
         if dataset_properties(pool).get(IOCAGE_POOL_PROP) == 'yes':
             return pool

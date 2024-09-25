@@ -49,6 +49,7 @@ import pathlib
 from iocage_lib.dataset import Dataset
 from iocage_lib.pools import PoolListableResource, Pool
 from iocage_lib.snapshot import Snapshot
+from iocage_lib.zfs import get_sysrc, IOCAGE_POOL_SETTING
 
 
 class JailRuntimeConfiguration(object):
@@ -443,11 +444,16 @@ class IOCConfiguration:
         """For internal getting of pool and iocroot."""
         def get_pool():
             # This function does following (keeping old behavior):
-            # 1) Ensures multiple activated pools aren't present
-            # 2) Activates first pool it finds until activate command has been
+            # 1) Get pool from /etc/rc.conf if set there
+            # 2) Ensures multiple activated pools aren't present
+            # 3) Activates first pool it finds until activate command has been
             #  issued already ( keeping old behavior )
-            # 3) Only activate if pool is not freenas-boot/boot-pool and
+            # 4) Only activate if pool is not freenas-boot/boot-pool and
             # iocage skip is false
+            sysrc_pool = get_sysrc(IOCAGE_POOL_SETTING)
+            if sysrc_pool is not None:
+                return sysrc_pool
+            
             old = False
             matches = []
             zpools = [pool for pool in PoolListableResource() if not pool.root_dataset.locked]

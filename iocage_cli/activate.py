@@ -26,6 +26,7 @@ import click
 
 import iocage_lib.ioc_common as ioc_common
 import iocage_lib.iocage as ioc
+from iocage_lib.zfs import get_sysrc, IOCAGE_POOL_SETTING
 
 __rootcmd__ = True
 
@@ -38,6 +39,12 @@ __rootcmd__ = True
 @click.argument("zpool")
 def cli(zpool, prefix):
     """Calls ZFS set to change the property org.freebsd.ioc:active to yes."""
+    if get_sysrc(IOCAGE_POOL_SETTING) is not None:
+        ioc_common.logit({
+                      "level"  : "WARNING",
+                      "message": f"Nothing to do: iocage_{IOCAGE_POOL_SETTING} is set in /etc/rc.conf"
+        })
+    
     ioc.IOCage(activate=True).activate(zpool, prefix)
 
     ioc_common.logit({
