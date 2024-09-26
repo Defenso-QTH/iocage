@@ -287,8 +287,7 @@ class ZFS:
                 sysrc_pool = get_sysrc('zfs_pool')
                 if sysrc_pool is not None:
                     ZFS.pool = sysrc_pool
-                    ZFS.pool_mountpoint =
-                        zfs.get(ZFS.pool).root_dataset.mountpoint
+                    ZFS.pool_mountpoint = zfs.get(ZFS.pool).root_dataset.mountpoint
                     ZFS.prefix = get_sysrc('zfs_prefix') or ''
                     return
                 pools = [
