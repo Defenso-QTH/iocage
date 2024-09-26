@@ -50,6 +50,11 @@ iocage_tests_task:
       test_script: pytest -rA --zpool=pool tests/functional_tests --junit-xml=reports/pytest-report.xml --image
     - name: Custom prefix
       test_script: pytest -rA --zpool=pool --prefix=test-prefix tests/functional_tests --junit-xml=reports/pytest-report.xml --image
+    - name: Use sysrc for conf
+      test_script:
+        - sysrc iocage_zfs_pool=pool
+        - sysrc iocage_zfs_prefix=sysrc/prefix
+        - pytest -rA --zpool=pool --prefix=test-prefix tests/functional_tests --junit-xml=reports/pytest-report.xml --image
   always:
     pytest_results_artifacts:
       path: reports/*.xml
