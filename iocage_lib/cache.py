@@ -4,10 +4,9 @@ import subprocess as su
 import threading
 
 from iocage_lib.zfs import (
-    all_properties, dataset_exists, get_all_dependents, get_dependents_with_depth, IOCAGE_POOL_PROP,
-        IOCAGE_PREFIX_PROP,
-        IOCAGE_POOL_SETTING,
-        get_sysrc
+    all_properties, dataset_exists, get_all_dependents,
+    get_dependents_with_depth, IOCAGE_POOL_PROP, IOCAGE_PREFIX_PROP,
+    IOCAGE_POOL_SETTING, IOCAGE_PREFIX_SETTING, get_sysrc
 )
 
 
@@ -34,6 +33,7 @@ class Cache:
     def iocage_activated_pool(self):
         sysrc_pool = get_sysrc(IOCAGE_POOL_SETTING)
         if sysrc_pool is not None:
+            self.ioc_prefix = get_sysrc(IOCAGE_PREFIX_SETTING) or ''
             return sysrc_pool
         return self.iocage_activated_pool_internal()
 

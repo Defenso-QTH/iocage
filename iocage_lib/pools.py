@@ -2,8 +2,8 @@ from iocage_lib.cache import cache
 from iocage_lib.ioc_exceptions import PoolNotActivated
 from iocage_lib.resource import Resource, ListableResource
 from iocage_lib.zfs import (
-    list_pools, IOCAGE_POOL_PROP,
-    IOCAGE_PREFIX_PROP, get_dependents
+    list_pools, IOCAGE_POOL_PROP, IOCAGE_PREFIX_PROP,
+    IOCAGE_PREFIX_SETTING, get_sysrc, get_dependents
 )
 
 import iocage_lib.dataset as dataset
@@ -31,6 +31,9 @@ class Pool(Resource):
 
     @property
     def prefix(self):
+      sysrc_prefix = get_sysrc(IOCAGE_PREFIX_SETTING)
+      if sysrc_prefix is not None:
+          return sysrc_prefix
       return Dataset(self.name, cache=self.cache).properties.get(
                   IOCAGE_PREFIX_PROP, ''
               )
@@ -44,7 +47,6 @@ class Pool(Resource):
             raise PoolNotActivated(
                 f'Please check pool status, it should be ONLINE'
             )
-
         Dataset(self.name).set_property(IOCAGE_POOL_PROP, 'yes')
         if prefix:
           Dataset(self.name).set_property(IOCAGE_PREFIX_PROP, prefix)

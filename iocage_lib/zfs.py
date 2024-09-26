@@ -115,10 +115,13 @@ def iocage_activated_pool():
 def iocage_activated_dataset():
     pool = iocage_activated_pool()
     if pool:
-        prefix = dataset_properties(pool).get(IOCAGE_PREFIX_PROP, '')
+        sysrc_prefix = get_sysrc(IOCAGE_PREFIX_SETTING)
+        if sysrc_prefix is None:
+            prefix = dataset_properties(pool).get(IOCAGE_PREFIX_PROP, '')
+        else:
+            prefix = sysrc_prefix
         if os.path.join(pool, prefix, 'iocage') in get_dependents(pool):
             return os.path.join(pool, prefix, 'iocage')
-
     return None
 
 

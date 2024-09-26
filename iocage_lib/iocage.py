@@ -358,6 +358,7 @@ class IOCage:
 
     def activate(self, zpool, prefix=''):
         """Activates the zpool for iocage usage"""
+        # Not called if pool set in sysrc
         zpool = Pool(zpool, cache=False)
         if not zpool.exists:
             ioc_common.logit(
