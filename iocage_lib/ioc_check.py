@@ -136,7 +136,10 @@ class IOCCheck(object):
                     if not ds.exists:
                         ds.create({'properties': dataset_options})
                 print('mountpoint:', ds.properties.get('mountpoint'))
-                if ds.properties.get('mountpoint') is None and ds.name.endswith('iocage'):
+                if (
+                    ds.properties.get('mountpoint') == 'none'
+                    and ds.name.endswith('iocage')
+                ):
                     ds.set_property('mountpoint', '/iocage')
                     ds.mount()
 
