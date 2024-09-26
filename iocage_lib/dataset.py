@@ -31,7 +31,10 @@ class Dataset(Resource):
                 else:
                     self.resource_name = self.name = next((
                         n for n, v in cache.datasets.items()
-                        if v.get('mountpoint') == self.name
+                        if (
+                            v.get('mountpoint') == self.name
+                            and v.get('mounted') == 'yes'
+                        )
                     ))
 
         if self.cache:
