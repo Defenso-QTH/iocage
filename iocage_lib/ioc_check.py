@@ -135,6 +135,10 @@ class IOCCheck(object):
                     ds = Dataset(zfs_dataset_name, cache=self.reset_cache)
                     if not ds.exists:
                         ds.create({'properties': dataset_options})
+                print('mountpoint:', ds.properties.get('mountpoint'))
+                if ds.properties.get('mountpoint') is None and ds.name.endswith('iocage'):
+                    ds.set_property('mountpoint', '/iocage')
+                    ds.mount()
 
             prop = ds.properties.get("exec")
             if prop != "on":
