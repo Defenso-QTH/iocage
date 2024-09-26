@@ -284,6 +284,13 @@ class ZFS:
     def set_pool(self):
         if not self.pool:
             with libzfs.ZFS() as zfs:
+                sysrc_pool = get_sysrc('zfs_pool')
+                if sysrc_pool is not None:
+                    ZFS.pool = sysrc_pool
+                    ZFS.pool_mountpoint =
+                        zfs.get(ZFS.pool).root_dataset.mountpoint
+                    ZFS.prefix = get_sysrc('zfs_prefix') or ''
+                    return
                 pools = [
                     p for p in zfs.pools
                     if p.root_dataset.__getstate__().get(
