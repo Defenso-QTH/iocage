@@ -452,7 +452,7 @@ class IOCConfiguration:
             # iocage skip is false
             sysrc_pool = get_sysrc(IOCAGE_POOL_SETTING)
             if sysrc_pool is not None:
-                return sysrc_pool
+                return Pool(sysrc_pool)
             
             old = False
             matches = []
