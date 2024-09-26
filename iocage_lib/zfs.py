@@ -103,7 +103,7 @@ def pool_properties(pool):
 
 def iocage_activated_pool():
     sysrc_pool= get_sysrc(IOCAGE_POOL_SETTING)
-    if pool_setting is not None:
+    if sysrc_pool is not None:
         return sysrc_pool
     for pool in list_pools():
         if dataset_properties(pool).get(IOCAGE_POOL_PROP) == 'yes':
