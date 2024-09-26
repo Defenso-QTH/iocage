@@ -319,9 +319,15 @@ def zfs():
 
 
 @pytest.fixture
-def get_sysrc():
+def sysrc_pool():
     from tests.data_classes import get_sysrc
-    return get_sysrc
+    return get_sysrc('zfs_pool')
+
+
+@pytest.fixture
+def sysrc_prefix():
+    from tests.data_classes import get_sysrc
+    return get_sysrc('zfs_prefix')
 
 
 @pytest.fixture

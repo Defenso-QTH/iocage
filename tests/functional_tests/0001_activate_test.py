@@ -31,8 +31,8 @@ require_zpool = pytest.mark.require_zpool
 
 @require_root
 @require_zpool
-def test_activate(zpool, prefix, invoke_cli, zfs, skip_test, get_sysrc):
-    skip_test(get_sysrc('zfs_pool') is not None)
+def test_activate(zpool, prefix, invoke_cli, zfs, skip_test, sysrc_pool):
+    skip_test(sysrc_pool is not None)
     args = [zpool]
     if prefix != '':
         args.extend(['-p', prefix])
@@ -45,3 +45,20 @@ def test_activate(zpool, prefix, invoke_cli, zfs, skip_test, get_sysrc):
     assert zfs.pool == zpool, f'Failed to activate {zpool}'
     if prefix != '':
         assert zfs.prefix == prefix, f'Failed to set prefix {prefix}'
+
+
+@require_root
+@require_zpool
+def test_noop_activate_with_sysrc(zpool, prefix, invoke_cli, zfs, skip_test, sysrc_pool, sysrc_prefix):
+    skip_test(sysrc_pool is None)
+    args = [zpool]
+    if prefix != '':
+        args.extend(['-p', prefix])
+    invoke_cli(
+        ['activate', *args]
+    )
+
+    zfs.set_pool()
+
+    assert zfs.pool == sysrc_pool, f'Activated pool although there is a sysrc setting.'
+    assert zfs.prefix == sysrc_prefix, f'Failed to set prefix {sysrc_prefix}'
