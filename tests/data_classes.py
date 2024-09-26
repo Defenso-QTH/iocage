@@ -13,7 +13,7 @@ import libzfs
 # A helper class to parse the output of iocage for us to test
 
 def get_sysrc(setting):
-    cp = run(['sysrc', f'iocage_{setting}'], check=False)
+    cp = subprocess.run(['sysrc', f'iocage_{setting}'], capture_output=True, text=True)
     if cp.returncode == 0:
         return cp.stdout.split(':', maxsplit=1)[-1].strip()
     else:
