@@ -44,16 +44,16 @@ def cli(zpool, prefix):
                       "level"  : "WARNING",
                       "message": f"Nothing to do: iocage_{IOCAGE_POOL_SETTING} is set in /etc/rc.conf"
         })
-    
-    ioc.IOCage(activate=True).activate(zpool, prefix)
+    else:
+        ioc.IOCage(activate=True).activate(zpool, prefix)
 
-    ioc_common.logit({
-        "level"  : "INFO",
-        "message": f"ZFS pool '{zpool}' successfully activated."
-    })
-    
-    if prefix:
-      ioc_common.logit({
-              "level"  : "INFO",
-              "message": f"Dataset prefix '{prefix}' set."
-          })
+        ioc_common.logit({
+            "level"  : "INFO",
+            "message": f"ZFS pool '{zpool}' successfully activated."
+        })
+        
+        if prefix:
+            ioc_common.logit({
+                "level"  : "INFO",
+                "message": f"Dataset prefix '{prefix}' set."
+            })

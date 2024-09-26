@@ -58,4 +58,4 @@ def test_noop_activate_with_sysrc(zpool, prefix, invoke_cli, zfs, skip_test, sys
         ['activate', *args]
     )
 
-    assert result.output == '', 'Did not receive warning for ignored pool with sysrc setting.'
+    assert result.output == '', 'Activate gave standard output when it should have printed nothing to stdout, just a warning in stderr.'
