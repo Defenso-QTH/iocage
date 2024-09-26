@@ -54,11 +54,8 @@ def test_noop_activate_with_sysrc(zpool, prefix, invoke_cli, zfs, skip_test, sys
     args = [zpool]
     if prefix != '':
         args.extend(['-p', prefix])
-    invoke_cli(
+    result = invoke_cli(
         ['activate', *args]
     )
 
-    zfs.set_pool()
-
-    assert zfs.pool == sysrc_pool, f'Activated pool although there is a sysrc setting.'
-    assert zfs.prefix == sysrc_prefix, f'Failed to set prefix {sysrc_prefix}'
+    assert result.output == '', 'Did not receive warning for ignored pool with sysrc setting.'
