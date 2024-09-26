@@ -12,6 +12,14 @@ import libzfs
 
 # A helper class to parse the output of iocage for us to test
 
+def get_sysrc(setting):
+    cp = run(['sysrc', f'iocage_{setting}'], check=False)
+    if cp.returncode == 0:
+        return cp.stdout.split(':', maxsplit=1)[-1].strip()
+    else:
+        return None
+
+
 class Row:
     powers = {
         'B': 0,
