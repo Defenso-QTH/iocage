@@ -31,7 +31,8 @@ require_zpool = pytest.mark.require_zpool
 
 @require_root
 @require_zpool
-def test_activate(zpool, prefix, invoke_cli, zfs):
+def test_activate(zpool, prefix, invoke_cli, zfs, skip_test, get_sysrc):
+    skip_test(get_sysrc('zfs_pool') is not None)
     args = [zpool]
     if prefix != '':
         args.extend(['-p', prefix])

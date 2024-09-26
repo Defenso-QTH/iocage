@@ -319,6 +319,12 @@ def zfs():
 
 
 @pytest.fixture
+def get_sysrc():
+    from tests.data_classes import get_sysrc
+    return get_sysrc
+
+
+@pytest.fixture
 def jail():
     from tests.data_classes import Jail
     return Jail
