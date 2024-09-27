@@ -763,7 +763,7 @@ def generate_devfs_ruleset(conf, paths=None, includes=None, callback=None,
         # modify devfs rulesets. So we cannot create a dynamic one. We have to
         # use the original ruleset directly.
         custom = int(configured_ruleset) == IOCAGE_DEVFS_RULESET
-        return (custom, configured_ruleset, configured_ruleset)
+        return (custom, configured_ruleset, '')
 
     ruleset_list = [int(i) for i in devfs_rulesets.stdout.splitlines()]
 
