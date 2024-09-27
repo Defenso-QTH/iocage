@@ -715,7 +715,10 @@ class IOCStart(object):
         os_path = f"{self.path}/root/dev/log"
 
         if not os.path.isfile(os_path) and not os.path.islink(os_path):
-            os.symlink("../var/run/log", os_path)
+            os.symlink(
+                os.path.abspath(os.path.join(os_path, "../var/run/log")),
+                os_path
+            )
 
         vnet_err = self.start_network(vnet, nat)
 
