@@ -760,10 +760,9 @@ def generate_devfs_ruleset(conf, paths=None, includes=None, callback=None,
 
     if devfs_rulesets.returncode != 0:
         # We are most likely in a jail. In a jail, we cannot view, add or
-        # modify devfs rulesets. So we cannot create a dynamic one. We have to
-        # use the original ruleset directly.
-        custom = int(configured_ruleset) == IOCAGE_DEVFS_RULESET
-        return (custom, configured_ruleset, '')
+        # modify devfs rulesets. Hence the failure. The only devfs ruleset
+        # supported in this case is zero.
+        return (False, configured_ruleset, '0')
 
     ruleset_list = [int(i) for i in devfs_rulesets.stdout.splitlines()]
 

@@ -513,7 +513,7 @@ class IOCStart(object):
             = iocage_lib.ioc_common.generate_devfs_ruleset(
                 self.conf, devfs_paths, devfs_includes)
 
-        if (devfs_ruleset != '' and int(devfs_ruleset) < 0):
+        if int(devfs_ruleset) < 0:
             iocage_lib.ioc_common.logit({
                 "level": "ERROR",
                 "message": f"{self.uuid} devfs_ruleset"
@@ -525,7 +525,7 @@ class IOCStart(object):
             return
 
         # Manually configured devfs_ruleset doesn't support all iocage features
-        if (devfs_ruleset != '' and manual_devfs_config):
+        if manual_devfs_config:
             if devfs_paths is not None or devfs_includes is not None:
                 iocage_lib.ioc_common.logit({
                     "level": "WARNING",
@@ -583,8 +583,7 @@ class IOCStart(object):
                 f'path={self.path}/root',
                 f'securelevel={securelevel}',
                 f'host.hostuuid={self.uuid}',
-                f'devfs_ruleset={devfs_ruleset}'
-                if devfs_ruleset != '' else '',
+                f'devfs_ruleset={devfs_ruleset}',
                 f'enforce_statfs={enforce_statfs}',
                 f'children.max={children_max}',
                 f'exec.clean={exec_clean}',
