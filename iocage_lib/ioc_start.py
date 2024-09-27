@@ -715,7 +715,15 @@ class IOCStart(object):
         os_path = f"{self.path}/root/dev/log"
 
         if not os.path.isfile(os_path) and not os.path.islink(os_path):
-            os.symlink("../var/run/log", os_path)
+            try:
+                os.symlink("../var/run/log", os_path)
+            except:
+                iocage_lib.ioc_common.logit({
+                                "level": "WARNING",
+                                "message": "  + Could not set up /dev/log"
+                            },
+                                _callback=self.callback,
+                                silent=self.silent)
 
         vnet_err = self.start_network(vnet, nat)
 
