@@ -55,7 +55,7 @@ INTERACTIVE = False
 IOCAGE_DEVFS_RULESET = 4
 
 
-def is_jailed(self):
+def is_jailed():
         from ctypes import cdll, c_int, c_size_t, sizeof, byref
         from ctypes.util import find_library
         
