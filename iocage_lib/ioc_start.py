@@ -96,7 +96,7 @@ class IOCStart(object):
         result = libc.sysctlbyname(b'security.jail.jailed', byref(_mem), byref(_sz), None, c_size_t(0))
         if result != 0:
             raise Exception('sysctl returned with error %s' % result)
-        print('sysctl:' _mem.value)
+        print('sysctl:', _mem.value)
         return _mem.value
 
     def __start_jail__(self):
