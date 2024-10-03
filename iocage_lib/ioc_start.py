@@ -87,7 +87,7 @@ class IOCStart(object):
                     raise e
 
     def is_jailed(self):
-        from ctypes import *
+        from ctypes import cdll, c_int, c_size_t, sizeof, byref
         from ctypes.util import find_library
         
         libc = cdll.LoadLibrary(find_library("c"))
