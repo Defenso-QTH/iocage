@@ -524,7 +524,7 @@ class IOCStart(object):
             )
         elif jailed:
             manual_devfs_config = False
-            configured_devfs_ruleset = conf['devfs_ruleset']
+            configured_devfs_ruleset = self.conf['devfs_ruleset']
             devfs_ruleset = 0
         else:
             # Generate dynamic devfs ruleset from configured one
