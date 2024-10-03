@@ -55,6 +55,19 @@ INTERACTIVE = False
 IOCAGE_DEVFS_RULESET = 4
 
 
+def is_jailed(self):
+        from ctypes import cdll, c_int, c_size_t, sizeof, byref
+        from ctypes.util import find_library
+        
+        libc = cdll.LoadLibrary(find_library("c"))
+        _mem = c_int(-1)
+        _sz = c_size_t(sizeof(_mem))
+        result = libc.sysctlbyname(b'security.jail.jailed', byref(_mem), byref(_sz), None, c_size_t(0))
+        if result != 0:
+            raise Exception('sysctl returned with error %s' % result)
+        return bool(_mem.value)
+
+
 def callback(_log, callback_exception):
     """Helper to call the appropriate logging level"""
     log = logging.getLogger('iocage')

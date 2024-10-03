@@ -86,18 +86,6 @@ class IOCStart(object):
                 if not suppress_exception:
                     raise e
 
-    def is_jailed(self):
-        from ctypes import cdll, c_int, c_size_t, sizeof, byref
-        from ctypes.util import find_library
-        
-        libc = cdll.LoadLibrary(find_library("c"))
-        _mem = c_int(-1)
-        _sz = c_size_t(sizeof(_mem))
-        result = libc.sysctlbyname(b'security.jail.jailed', byref(_mem), byref(_sz), None, c_size_t(0))
-        if result != 0:
-            raise Exception('sysctl returned with error %s' % result)
-        return bool(_mem.value)
-
     def __start_jail__(self):
         """
         Takes a UUID, and the user supplied name of a jail, the path and the
@@ -509,7 +497,7 @@ class IOCStart(object):
             _callback=self.callback,
             silent=self.silent)
 
-        jailed = self.is_jailed()
+        jailed = iocage_lib.ioc_common.is_jailed()
         msg = f" + Jailed: {jailed and 'yes' or 'no'}"
         iocage_lib.ioc_common.logit({
             "level": "INFO",

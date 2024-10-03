@@ -274,43 +274,52 @@ class IOCStop(object):
                         _callback=self.callback,
                         silent=self.silent)
 
-        # Clean up after our dynamic devfs rulesets
-        devfs_rulesets = su.run(
-            ['devfs', 'rule', 'showsets'],
-            stdout=su.PIPE, universal_newlines=True
-        )
-        ruleset_list = [int(i) for i in devfs_rulesets.stdout.splitlines()]
-
-        if int(devfs_ruleset) in ruleset_list:
-            try:
-                su.run(
-                    ['devfs', 'rule', '-s', devfs_ruleset, 'delset'],
-                    stdout=su.PIPE
-                )
-
-                iocage_lib.ioc_common.logit({
-                    "level": "INFO",
-                    "message": f'  + Removing devfs_ruleset: {devfs_ruleset}'
-                               ' OK'
-                },
-                    _callback=self.callback,
-                    silent=self.silent)
-            except su.CalledProcessError:
-                iocage_lib.ioc_common.logit({
-                    "level": 'ERROR',
-                    "message": f'  + Removing devfs_ruleset: {devfs_ruleset}'
-                               ' FAILED'
-                },
-                    _callback=self.callback,
-                    silent=self.silent)
-        else:
+        if iocage_lib.ioc_common.is_jailed():
             iocage_lib.ioc_common.logit({
-                "level": 'ERROR',
-                "message": '  + Refusing to remove protected devfs_ruleset:'
-                           f' {devfs_ruleset}'
+                "level": "INFO",
+                "message": f'  + No devfs_ruleset to remove.'
             },
                 _callback=self.callback,
-                silent=self.silent)
+                silent=self.silent
+            )
+        else:
+            # Clean up after our dynamic devfs rulesets
+            devfs_rulesets = su.run(
+                ['devfs', 'rule', 'showsets'],
+                stdout=su.PIPE, universal_newlines=True
+            )
+            ruleset_list = [int(i) for i in devfs_rulesets.stdout.splitlines()]
+    
+            if int(devfs_ruleset) in ruleset_list:
+                try:
+                    su.run(
+                        ['devfs', 'rule', '-s', devfs_ruleset, 'delset'],
+                        stdout=su.PIPE
+                    )
+    
+                    iocage_lib.ioc_common.logit({
+                        "level": "INFO",
+                        "message": f'  + Removing devfs_ruleset: {devfs_ruleset}'
+                                   ' OK'
+                    },
+                        _callback=self.callback,
+                        silent=self.silent)
+                except su.CalledProcessError:
+                    iocage_lib.ioc_common.logit({
+                        "level": 'ERROR',
+                        "message": f'  + Removing devfs_ruleset: {devfs_ruleset}'
+                                   ' FAILED'
+                    },
+                        _callback=self.callback,
+                        silent=self.silent)
+            else:
+                iocage_lib.ioc_common.logit({
+                    "level": 'ERROR',
+                    "message": '  + Refusing to remove protected devfs_ruleset:'
+                               f' {devfs_ruleset}'
+                },
+                    _callback=self.callback,
+                    silent=self.silent)
 
         # Build up a jail stop command.
         cmd = ['jail', '-q']
