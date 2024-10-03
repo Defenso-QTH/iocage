@@ -758,12 +758,6 @@ def generate_devfs_ruleset(conf, paths=None, includes=None, callback=None,
         stdout=su.PIPE, universal_newlines=True
     )
 
-    if devfs_rulesets.returncode != 0:
-        # We are most likely in a jail. In a jail, we cannot view, add or
-        # modify devfs rulesets. Hence the failure. The only devfs ruleset
-        # supported in this case is zero.
-        return (False, configured_ruleset, '0')
-
     ruleset_list = [int(i) for i in devfs_rulesets.stdout.splitlines()]
 
     ruleset = int(conf["min_dyn_devfs_ruleset"])

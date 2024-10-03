@@ -96,8 +96,7 @@ class IOCStart(object):
         result = libc.sysctlbyname(b'security.jail.jailed', byref(_mem), byref(_sz), None, c_size_t(0))
         if result != 0:
             raise Exception('sysctl returned with error %s' % result)
-        print('sysctl:', _mem.value)
-        return _mem.value
+        return bool(_mem.value)
 
     def __start_jail__(self):
         """
@@ -510,7 +509,8 @@ class IOCStart(object):
             _callback=self.callback,
             silent=self.silent)
 
-        msg = f"* Jailed {self.is_jailed()}"
+        jailed = self.is_jailed()
+        msg = f"* Jailed: {jailed and 'yes' or 'no'}"
         iocage_lib.ioc_common.logit({
             "level": "INFO",
             "message": msg
@@ -529,35 +529,45 @@ class IOCStart(object):
             devfs_paths = devfs_json.get('devfs_ruleset', {}).get('paths')
             devfs_includes = devfs_json.get('devfs_ruleset', {}).get('includes')
 
-        # Generate dynamic devfs ruleset from configured one
-        (manual_devfs_config, configured_devfs_ruleset, devfs_ruleset) \
-            = iocage_lib.ioc_common.generate_devfs_ruleset(
-                self.conf, devfs_paths, devfs_includes)
-
-        if int(devfs_ruleset) < 0:
-            iocage_lib.ioc_common.logit({
-                "level": "ERROR",
-                "message": f"{self.uuid} devfs_ruleset"
-                           f" {configured_devfs_ruleset} does not exist!"
-                           " - Not starting jail"
-            },
-                _callback=self.callback,
-                silent=self.silent)
-            return
-
-        # Manually configured devfs_ruleset doesn't support all iocage features
-        if manual_devfs_config:
-            if devfs_paths is not None or devfs_includes is not None:
+        if jailed and (devfs_paths or devfs_includes):
+            # TODO: check that devices necessary for the plugin are available
+            raise NotImplementedError(
+                'Plugins in hierarchical jails are not supported yet.'
+            )
+        elif jailed:
+            manual_devfs_config = False
+            configured_devfs_ruleset = None
+            devfs_ruleset = 0
+        else:
+            # Generate dynamic devfs ruleset from configured one
+            (manual_devfs_config, configured_devfs_ruleset, devfs_ruleset) \
+                = iocage_lib.ioc_common.generate_devfs_ruleset(
+                    self.conf, devfs_paths, devfs_includes)
+    
+            if int(devfs_ruleset) < 0:
                 iocage_lib.ioc_common.logit({
-                    "level": "WARNING",
-                    "message": f"  {self.uuid} is not using the devfs_ruleset"
-                               " of "
-                               f"{iocage_lib.ioc_common.IOCAGE_DEVFS_RULESET}"
-                               ", devices and includes from plugin not added"
-                               ", some features of the plugin may not work."
+                    "level": "ERROR",
+                    "message": f"{self.uuid} devfs_ruleset"
+                               f" {configured_devfs_ruleset} does not exist!"
+                               " - Not starting jail"
                 },
                     _callback=self.callback,
                     silent=self.silent)
+                return
+    
+            # Manually configured devfs_ruleset doesn't support all iocage features
+            if manual_devfs_config:
+                if devfs_paths is not None or devfs_includes is not None:
+                    iocage_lib.ioc_common.logit({
+                        "level": "WARNING",
+                        "message": f"  {self.uuid} is not using the devfs_ruleset"
+                                   " of "
+                                   f"{iocage_lib.ioc_common.IOCAGE_DEVFS_RULESET}"
+                                   ", devices and includes from plugin not added"
+                                   ", some features of the plugin may not work."
+                    },
+                        _callback=self.callback,
+                        silent=self.silent)
 
             if wants_dhcp and self.conf['type'] != 'pluginv2':
                 iocage_lib.ioc_common.logit({
