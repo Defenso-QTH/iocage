@@ -510,7 +510,7 @@ class IOCStart(object):
             silent=self.silent)
 
         jailed = self.is_jailed()
-        msg = f"* Jailed: {jailed and 'yes' or 'no'}"
+        msg = f" + Jailed: {jailed and 'yes' or 'no'}"
         iocage_lib.ioc_common.logit({
             "level": "INFO",
             "message": msg
@@ -536,7 +536,7 @@ class IOCStart(object):
             )
         elif jailed:
             manual_devfs_config = False
-            configured_devfs_ruleset = None
+            configured_devfs_ruleset = conf['devfs_ruleset']
             devfs_ruleset = 0
         else:
             # Generate dynamic devfs ruleset from configured one
@@ -733,12 +733,18 @@ class IOCStart(object):
                 _callback=self.callback,
                 silent=self.silent)
 
+        if jailed and configured_devfs_ruleset != '0':
+            devfs_comment = ('(ignored configuration value "'
+                f'{configured_devfs_ruleset}": we are in a jail)')
+        elif manual_devfs_config:
+            devfs_comment = ('(cloned from devfs_ruleset '
+                f'{configured_devfs_ruleset})')
+        else:
+            devfs_comment = '(iocage generated default)'
         iocage_lib.ioc_common.logit({
             'level': 'INFO',
             'message': f'  + Using devfs_ruleset: {devfs_ruleset}'
-                       + (' (cloned from devfs_ruleset '
-                          f'{configured_devfs_ruleset})' if manual_devfs_config
-                          else ' (iocage generated default)')
+                f' {devfs_comment}'
         },
             _callback=self.callback,
             silent=self.silent)
