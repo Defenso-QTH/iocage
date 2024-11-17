@@ -164,7 +164,7 @@ def jail_ip(request):
     return request.config.getoption('--jail_ip')
 
 @pytest.fixture
-def nobridge_jail_ipjail_ip(request):
+def nobridge_jail_ip(request):
     """Specify a jail ip to use."""
     return request.config.getoption('--nobridge_jail_ip')
 
