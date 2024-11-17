@@ -27,6 +27,7 @@ import pytest
 
 require_root = pytest.mark.require_root
 require_zpool = pytest.mark.require_zpool
+require_jail_ip = pytest.mark.require_jail_ip
 
 
 @require_root
