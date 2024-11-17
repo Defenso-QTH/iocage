@@ -54,3 +54,20 @@ def test_02_start_rc_jail(invoke_cli, resource_selector):
         assert jail.running is True, f'{jail.name} not running'
 
 # TODO: Let's also start jails in a single command to test that out
+
+@require_root
+@require_zpool
+@require_jail_ip
+def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, jail_ip):
+    jail = jail('assigned_ip_jail')
+
+    invoke_cli([
+        'create', '-r', release, '-n', jail.name, f'ip4_addr={jail_ip}',
+        'boot=on', 'vnet=on', 'interfaces=vnet0:none',
+        'vnet_default_interface=none'
+    ])
+
+    assert jail.exists is True
+    assert jail.running is True
+    
+    # TODO: Check ifconfig output
