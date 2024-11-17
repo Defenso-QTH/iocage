@@ -1962,7 +1962,7 @@ class IOCage:
                     'message': 'Updating pkgs...'
                 })
                 pkg_update = su.run(
-                    ['pkg-static', '-j', jid, 'update', '-q', '-f'],
+                    ['/usr/local/sbin/pkg-static', '-j', jid, 'update', '-q', '-f'],
                     stdout=su.PIPE, stderr=su.STDOUT
                 )
                 if pkg_update.returncode:

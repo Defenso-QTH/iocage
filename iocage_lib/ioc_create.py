@@ -864,7 +864,7 @@ class IOCCreate(object):
         # To avoid a user being prompted about pkg.
         pkg_retry = 1
         while True:
-            pkg_install = su.run(["pkg-static", "-j", jid, "install", "-q",
+            pkg_install = su.run(["/usr/local/sbin/pkg-static", "-j", jid, "install", "-q",
                                   "-y", "pkg"],
                                  stdout=su.PIPE,
                                  stderr=su.STDOUT)

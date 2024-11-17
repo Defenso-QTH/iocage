@@ -188,7 +188,7 @@ class IOCUpgrade:
             if f_rel.startswith('12'):
                 #  https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=239498
                 cp = su.Popen(
-                    ['pkg-static', '-j', self.jid, 'install', '-q', '-f', '-y', 'pkg'],
+                    ['/usr/local/sbin/pkg-static', '-j', self.jid, 'install', '-q', '-f', '-y', 'pkg'],
                     stdout=su.PIPE, stderr=su.PIPE, env=self.upgrade_env
                 )
                 _, stderr = cp.communicate()
