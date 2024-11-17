@@ -27,7 +27,7 @@ import pytest
 
 require_root = pytest.mark.require_root
 require_zpool = pytest.mark.require_zpool
-require_jail_ip = pytest.mark.require_jail_ip
+require_nobridge_jail_ip = pytest.mark.require_nobridge_jail_ipjail_ip
 
 
 @require_root
@@ -58,14 +58,14 @@ def test_02_start_rc_jail(invoke_cli, resource_selector):
 
 @require_root
 @require_zpool
-@require_jail_ip
-def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, jail_ip):
+@require_nobridge_jail_ip
+def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobridge_jail_ip):
     jail = jail('nobridge_jail')
 
     invoke_cli([
-        'create', '-r', release, '-n', jail.name, f'ip4_addr={jail_ip}',
-        'boot=on', 'vnet=on', 'interfaces=vnet0:none',
-        'vnet_default_interface=none'
+        'create', '-r', release, '-n', jail.name,
+        f'ip4_addr={nobridge_jail_ip}', 'boot=on', 'vnet=on',
+        'interfaces=vnet0:none', 'vnet_default_interface=none'
     ])
 
     assert jail.exists is True

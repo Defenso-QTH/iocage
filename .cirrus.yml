@@ -48,7 +48,7 @@ iocage_tests_task:
   install_iocage_script:
     - python3 setup.py install
   ifconfig_script: ifconfig
-  test_script: pytest --zpool=pool tests/functional_tests --junit-xml=reports/pytest-report.xml -rA --image --jail_ip=192.168.2.2
+  test_script: pytest --zpool=pool tests/functional_tests --junit-xml=reports/pytest-report.xml -rA --image --nobridge_jail_ip=192.168.2.2
   always:
     ifconfig_after_script: ifconfig
     pytest_results_artifacts:

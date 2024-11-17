@@ -80,6 +80,10 @@ def pytest_addoption(parser):
         help='Static IP to use creating jails'
     )
     parser.addoption(
+        '--nobridge_jail_ip', action='store', default=None,
+        help='Static IP to use creating nobridge jails'
+    )
+    parser.addoption(
         '--dhcp', action='store_true', default=False,
         help='Use DHCP for creating jails'
     )
@@ -124,6 +128,12 @@ def pytest_runtest_setup(item):
         and not item.config.getvalue('jail_ip')
     ):
         pytest.skip('Need --jail_ip option to run')
+    
+    if (
+        'require_nobridge_jail_ip' in item.keywords
+        and not item.config.getvalue('nobridge_jail_ip')
+    ):
+        pytest.skip('Need --nobridge_jail_ip option to run')
 
     if (
         'require_networking' in item.keywords
@@ -153,6 +163,10 @@ def jail_ip(request):
     """Specify a jail ip to use."""
     return request.config.getoption('--jail_ip')
 
+@pytest.fixture
+def nobridge_jail_ipjail_ip(request):
+    """Specify a jail ip to use."""
+    return request.config.getoption('--nobridge_jail_ip')
 
 @pytest.fixture
 def dhcp(request):
