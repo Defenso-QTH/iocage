@@ -60,7 +60,7 @@ def test_02_start_rc_jail(invoke_cli, resource_selector):
 @require_zpool
 @require_jail_ip
 def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, jail_ip):
-    jail = jail('assigned_ip_jail')
+    jail = jail('nobridge_jail')
 
     invoke_cli([
         'create', '-r', release, '-n', jail.name, f'ip4_addr={jail_ip}',
