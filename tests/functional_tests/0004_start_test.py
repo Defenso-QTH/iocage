@@ -77,3 +77,5 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
 
     assert bool(stderr) is False, f'Ifconfig returned an error: {stderr}'
     assert 'bridge' not in stdout, 'Unexpected bridge was created.'
+    assert f'vnet0.{jail.jid}:' in stdout
+    assert f'description: associated with jail: {jail.name} as nic: epair0b'
