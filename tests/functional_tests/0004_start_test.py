@@ -66,7 +66,7 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
         'create', '-r', release, '-n', jail.name,
         f'ip4_addr=lo0|{nobridge_jail_ip}', 'boot=on', 'vnet=on',
         'interfaces=vnet0:none', 'vnet_default_interface=none',
-        'ip6_addr=epair0b|fe80::2/10', 'defaultrouter6=none',
+        'ip6_addr=vnet0|fe80::2/10', 'defaultrouter6=none',
         'defaultrouter=none'
     ])
 
