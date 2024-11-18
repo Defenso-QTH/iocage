@@ -69,9 +69,9 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
 
     try:
         with os.fdopen(fd, 'w') as tmp:
-            tmp.write(inspect.cleandoc("""
+            tmp.write(inspect.cleandoc(f"""
                 #!/bin/sh
-                jailname=ioc-$1
+                jailname=ioc-{jail.name}
                 jid=jls -j $jailname jid
                 iface=vnet0.$jid
                 ifconfig $iface inet6 fe80::1/64
@@ -84,7 +84,7 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
             'interfaces=vnet0:none', 'vnet_default_interface=none',
             'ip6_addr=vnet0|fe80::2/64', 'defaultrouter6=none',
             'defaultrouter=none',
-            f'exec_poststart={path} {jail.name}'
+            f'exec_poststart={path}'
         ])
     
         assert jail.exists is True
