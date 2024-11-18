@@ -73,6 +73,9 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
     assert jail.exists is True
     assert jail.running is True
 
+    stdout, stderr = jail.run_command(['ifconfig'])
+    assert 'zzzz' in stdout
+
     stdout, stderr = jail.run_command(['ifconfig'], jailed=False)
 
     assert bool(stderr) is False, f'Ifconfig returned an error: {stderr}'
