@@ -67,18 +67,23 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
         f'ip4_addr=lo0|{nobridge_jail_ip}', 'boot=on', 'vnet=on',
         'interfaces=vnet0:none', 'vnet_default_interface=none',
         'ip6_addr=vnet0|fe80::2/10', 'defaultrouter6=none',
-        'defaultrouter=none'
+        'defaultrouter=none',
+        f'exec_poststart="ifconfig vnet0.$(jls -j ioc-{jail.name} jid) inet6 fe80::1/10 && route add -6 fe80::2%vnet0.$(jls -j ioc-{jail.name} jid) -iface vnet0.$(jls -j ioc-{jail.name} jid)"'
     ])
 
     assert jail.exists is True
     assert jail.running is True
 
     stdout, stderr = jail.run_command(['ifconfig'])
-    assert 'zzzz' in stdout
+    assert bool(stderr) is False, f'Ifconfig returned an error: {stderr}'
+    assert 'fe80::2%epair0b' in stdout
 
     stdout, stderr = jail.run_command(['ifconfig'], jailed=False)
 
     assert bool(stderr) is False, f'Ifconfig returned an error: {stderr}'
     assert 'bridge' not in stdout, 'Unexpected bridge was created.'
-    assert f'vnet0.{jail.jid}:' in stdout
+    assert f'fe80::1%vnet0.{jail.jid}:' in stdout
     assert f'description: associated with jail: {jail.name} as nic: epair0b'
+
+    stdout, stderr = jail.run_command(['ping', '-c', '1', f'fe80::2%vnet0.{jail.jid}'], jailed=False)
+    assert bool(stderr) is False, f'Ping returned an error: {stderr}'
