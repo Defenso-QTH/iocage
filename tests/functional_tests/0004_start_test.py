@@ -25,6 +25,7 @@
 import pytest
 import inspect
 import tempfile
+import os
 
 
 require_root = pytest.mark.require_root
