@@ -84,7 +84,7 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
             'interfaces=vnet0:none', 'vnet_default_interface=none',
             'ip6_addr=vnet0|fe80::2/64', 'defaultrouter6=none',
             'defaultrouter=none',
-            f'exec_poststart="{path} {jail.name}"'
+            f'exec_poststart={path} {jail.name}'
         ])
     
         assert jail.exists is True
