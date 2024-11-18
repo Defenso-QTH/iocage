@@ -76,6 +76,7 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
                 iface=vnet0.$jid
                 ifconfig $iface inet6 fe80::1/64
             """))
+        os.chmod(path, 0o755)
 
         invoke_cli([
             'create', '-r', release, '-n', jail.name,
