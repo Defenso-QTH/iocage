@@ -99,7 +99,7 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
     
         assert bool(stderr) is False, f'Ifconfig returned an error: {stderr}'
         assert re.search(r'bridge[0-9]', stdout) is None, 'Unexpected bridge was created.'
-        assert f'fe80::1%vnet0.{jail.jid}:' in stdout
+        assert f'fe80::1%vnet0.{jail.jid}' in stdout
         assert f'description: associated with jail: {jail.name} as nic: epair0b'
     
         stdout, stderr = jail.run_command(['ping', '-c', '1', f'fe80::2%vnet0.{jail.jid}'], jailed=False)
