@@ -119,7 +119,7 @@ def test_04_vnet_jail_with_loopback_alias(release, jail, invoke_cli):
 
     invoke_cli([
         'create', '-r', release, '-n', jail.name,
-        'boot=on', 'vnet=on',
+        'boot=on', 'vnet=on', 'defaultrouter=none',
         f'ip4_addr=lo0|192.168.2.10'
     ])
 
