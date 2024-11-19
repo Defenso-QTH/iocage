@@ -72,7 +72,7 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
             tmp.write(inspect.cleandoc(f"""
                 #!/bin/sh
                 jailname=ioc-{jail.name}
-                jid=jls -j $jailname jid
+                jid=$(jls -j $jailname jid)
                 iface=vnet0.$jid
                 ifconfig $iface inet6 fe80::1/64
             """))
