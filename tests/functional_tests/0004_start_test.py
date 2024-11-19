@@ -81,10 +81,10 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
 
         invoke_cli([
             'create', '-r', release, '-n', jail.name,
-            f'ip4_addr=lo0|{nobridge_jail_ip}', 'boot=on', 'vnet=on',
+            'boot=on', 'vnet=on',
             'interfaces=vnet0:none', 'vnet_default_interface=none',
-            'ip6_addr=vnet0|fe80::2/64', 'defaultrouter6=none',
-            'defaultrouter=none',
+            f'ip4_addr=lo0|{nobridge_jail_ip}', 'ip6_addr=vnet0|fe80::2/64',
+            'defaultrouter6=none', 'defaultrouter=none',
             f'exec_poststart={path}'
         ])
     
@@ -104,6 +104,10 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
     
         stdout, stderr = jail.run_command(['ping', '-c', '1', f'fe80::2%vnet0.{jail.jid}'], jailed=False)
         assert bool(stderr) is False, f'Ping returned an error: {stderr}'
+
+        invoke_cli([
+            'destroy', jail.name, '-f'
+        ])
 
     finally:
         os.remove(path)
