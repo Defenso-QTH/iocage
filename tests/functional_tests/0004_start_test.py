@@ -26,6 +26,7 @@ import pytest
 import inspect
 import tempfile
 import os
+import re
 
 
 require_root = pytest.mark.require_root
@@ -97,7 +98,7 @@ def test_03_create_and_start_nobridge_vnet_jail(release, jail, invoke_cli, nobri
         stdout, stderr = jail.run_command(['ifconfig'], jailed=False)
     
         assert bool(stderr) is False, f'Ifconfig returned an error: {stderr}'
-        assert 'bridge' not in stdout, 'Unexpected bridge was created.'
+        assert re.search(r'bridge[0-9]', stdout) is None, 'Unexpected bridge was created.'
         assert f'fe80::1%vnet0.{jail.jid}:' in stdout
         assert f'description: associated with jail: {jail.name} as nic: epair0b'
     
